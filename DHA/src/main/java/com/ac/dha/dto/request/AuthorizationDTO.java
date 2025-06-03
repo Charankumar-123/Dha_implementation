@@ -123,4 +123,28 @@ public class AuthorizationDTO {
 		this.observation = observation;
 	}
 
+	public AuthorizationDTO(String type, String id, String memberID, String payerID, String emiratesIDNumber,
+			String dateOrdered, EncounterDTO encounter, List<DiagnosisDTO> diagnoses, List<ActivityDTO> activities,
+			List<ObservationDTO> observation) {
+		super();
+		this.type = type;
+		this.id = id;
+		this.memberID = memberID;
+		this.payerID = payerID;
+		this.emiratesIDNumber = emiratesIDNumber;
+		this.dateOrdered = dateOrdered;
+		this.encounter = encounter;
+		this.diagnoses = diagnoses;
+		this.activities = activities;
+		this.observation = observation;
+	}
+
+	@Override
+	public String toString() {
+		return "AuthorizationDTO [type=" + type + ", id=" + id + ", memberID=" + memberID + ", payerID=" + payerID
+				+ ", emiratesIDNumber=" + emiratesIDNumber + ", dateOrdered=" + dateOrdered + ", encounter=" + encounter
+				+ ", diagnoses=" + diagnoses + ", activities=" + activities + ", observation=" + observation + "]";
+	}
+
+	
 }

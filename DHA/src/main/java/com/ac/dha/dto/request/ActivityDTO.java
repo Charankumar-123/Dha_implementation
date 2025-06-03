@@ -104,7 +104,5 @@ public class ActivityDTO {
 	public void setObservations(List<ObservationDTO> observations) {
 		this.observations = observations;
 	}
-	
-	
 
 }

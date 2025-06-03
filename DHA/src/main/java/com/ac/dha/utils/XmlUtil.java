@@ -1,12 +1,14 @@
 package com.ac.dha.utils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.StringReader;
 
 import org.springframework.stereotype.Component;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
 
 @Component
 public class XmlUtil {
@@ -20,4 +22,10 @@ public class XmlUtil {
 		marshaller.marshal(requestObject, baos);
 		return baos.toByteArray();
 	}
+	
+	public <T> T fromXml(String xml, Class<T> clazz) throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(clazz);
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        return clazz.cast(unmarshaller.unmarshal(new StringReader(xml)));
+    }
 }

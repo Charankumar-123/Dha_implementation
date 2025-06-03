@@ -21,10 +21,9 @@ public class UploadERxAuthorizationForUserDTO {
 	@XmlElement(name = "PayerPwd")
 	private String payerPwd;
 
-
 	@XmlElement(name = "FileName")
 	private String fileName;
-	
+
 	private ErxRequestDTO priorRequest;
 
 	public ErxRequestDTO getPriorRequest() {
@@ -51,7 +50,6 @@ public class UploadERxAuthorizationForUserDTO {
 		this.payerPwd = payerPwd;
 	}
 
-
 	public String getFileName() {
 		return fileName;
 	}
@@ -59,6 +57,5 @@ public class UploadERxAuthorizationForUserDTO {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	
-	
+
 }

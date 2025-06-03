@@ -1,6 +1,7 @@
 package com.ac.dha.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,14 +13,15 @@ import com.ac.dha.dto.request.GetNewTransactionsRequestDTO;
 import com.ac.dha.dto.request.GeteRxTransactionRequestDTO;
 import com.ac.dha.dto.request.SearchTransactionsRequestDTO;
 import com.ac.dha.dto.request.SetTransactionDownloadedRequestDTO;
-import com.ac.dha.dto.request.UploadERxAuthorizationDTO;
 import com.ac.dha.dto.request.UploadERxAuthorizationForUserDTO;
-import com.ac.dha.dto.request.UploadERxRequestDTO;
 import com.ac.dha.dto.request.UploadERxRequestForUserDTO;
+import com.ac.dha.dto.response.UploadERxAuthorizationResponseDTO;
 import com.ac.dha.service.EClaimService;
 
 @Controller
 public class EClaimController {
+
+//	public static final Logger logger = LoggerFactory.getLogger(EClaimController.class);
 
 	@Autowired
 	private EClaimService eclaimService;
@@ -29,8 +31,9 @@ public class EClaimController {
 		return eclaimService.sendPriorRequestToEclaim(request);
 	}
 
-	@PostMapping("/upload-erx-request")
-	public ResponseEntity<String> uploadERxRequest(@RequestBody UploadERxRequestForUserDTO dto) {
+	@PostMapping(value = "/upload-erx-request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UploadERxAuthorizationResponseDTO> uploadERxRequest(
+			@RequestBody UploadERxRequestForUserDTO dto) {
 		return eclaimService.uploadERxRequest(dto);
 	}
 

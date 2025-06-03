@@ -26,7 +26,6 @@ public class UploadERxAuthorizationDTO {
 
 	@XmlElement(name = "FileName")
 	private String fileName;
-	
 
 	public String getPayerLogin() {
 		return payerLogin;
@@ -59,6 +58,5 @@ public class UploadERxAuthorizationDTO {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	
-	
+
 }

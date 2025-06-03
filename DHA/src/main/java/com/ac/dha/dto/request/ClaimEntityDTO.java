@@ -49,6 +49,5 @@ public class ClaimEntityDTO {
 	public void setClaimAmount(Double claimAmount) {
 		this.claimAmount = claimAmount;
 	}
-	
-	
+
 }

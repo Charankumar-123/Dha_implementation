@@ -38,7 +38,5 @@ public class ErxRequestDTO {
 	public void setAuthorization(AuthorizationDTO authorization) {
 		this.authorization = authorization;
 	}
-	
-	
-	
+
 }

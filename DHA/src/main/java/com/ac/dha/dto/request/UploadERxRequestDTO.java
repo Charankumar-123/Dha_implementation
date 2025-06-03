@@ -3,11 +3,13 @@ package com.ac.dha.dto.request;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 //@Data
 //@AllArgsConstructor
 //@NoArgsConstructor
 //@Builder
+@XmlRootElement(name = "UploadERxRequest")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class UploadERxRequestDTO {
 
@@ -28,7 +30,6 @@ public class UploadERxRequestDTO {
 
 	@XmlElement(name = "FileName")
 	private String fileName;
-
 
 	public String getFacilityLogin() {
 		return facilityLogin;
