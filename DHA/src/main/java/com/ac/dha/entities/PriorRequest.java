@@ -1,64 +1,61 @@
+// PriorRequest.java
 package com.ac.dha.entities;
 
-
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "prior_request")
 public class PriorRequest {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
-	@OneToOne
-	private Header header;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@OneToOne
-	private Authorization authorization;
-	
-	public PriorRequest() {}
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "header_id", referencedColumnName = "id")
+    private Header header;
 
-	public Long getId() {
-		return id;
-	}
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "authorization_id", referencedColumnName = "id")
+    private Authorization authorization;
+    
+    // getters and setters
 
-	public void setId(Long id) {
-		this.id = id;
-	}
 
-	public Header getHeader() {
-		return header;
-	}
+    public PriorRequest() {
+    }
 
-	public void setHeader(Header header) {
-		this.header = header;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Authorization getAuthorization() {
-		return authorization;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setAuthorization(Authorization authorization) {
-		this.authorization = authorization;
-	}
+    public Header getHeader() {
+        return header;
+    }
 
-	@Override
-	public String toString() {
-		return "PriorRequest [id=" + id + ", header=" + header + ", authorization=" + authorization + "]";
-	}
+    public void setHeader(Header header) {
+        this.header = header;
+    }
 
-	public PriorRequest(Long id, Header header, Authorization authorization) {
-		super();
-		this.id = id;
-		this.header = header;
-		this.authorization = authorization;
-	}
+    public Authorization getAuthorization() {
+        return authorization;
+    }
 
-	
-	
+    public void setAuthorization(Authorization authorization) {
+        this.authorization = authorization;
+    }
+
+    @Override
+    public String toString() {
+        return "PriorRequest [id=" + id + ", header=" + header + ", authorization=" + authorization + "]";
+    }
+
+    public PriorRequest(Long id, Header header, Authorization authorization) {
+        this.id = id;
+        this.header = header;
+        this.authorization = authorization;
+    }
 }

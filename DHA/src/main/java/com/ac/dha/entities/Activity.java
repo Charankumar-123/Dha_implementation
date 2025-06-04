@@ -13,10 +13,6 @@ public class Activity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "authorization_id", nullable = false)
-    private Authorization authorization;
-
     @Column(name = "activity_id", nullable = false)
     private String activityId;
 
@@ -37,9 +33,15 @@ public class Activity {
 
     @Column(name = "clinician", nullable = false)
     private String clinician;
+    
+    @ManyToOne
+    @JoinColumn(name = "authorization_id", nullable = false)
+    private Authorization authorization;
 
     @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
     private List<Observation> observations;
+
+    
     
     public Activity() {}
 

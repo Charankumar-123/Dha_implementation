@@ -1,5 +1,4 @@
 package com.ac.dha.utils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,107 +23,307 @@ import com.ac.dha.entities.PriorRequest;
 @Component
 public class ERXEntityMapper {
 
-	public PriorRequest toPriorRequest(ErxRequestDTO dto) {
-		PriorRequest priorRequest = new PriorRequest();
-		priorRequest.setHeader(toHeader(dto.getHeader()));
-		priorRequest.setAuthorization(toAuthorization(dto.getAuthorization()));
-		return priorRequest;
-	}
+    public PriorRequest toPriorRequest(ErxRequestDTO dto) {
+        PriorRequest priorRequest = new PriorRequest();
+        priorRequest.setHeader(toHeader(dto.getHeader()));
+        
+        // Create authorization and set its back-reference
+        Authorization authorization = toAuthorization(dto.getAuthorization());
+        priorRequest.setAuthorization(authorization);
+        
+        return priorRequest;
+    }
 
-	private Header toHeader(HeaderDTO dto) {
-		if (dto == null) {
-			return null;
-		}
-		Header header = new Header();
-		header.setSenderID(dto.getSenderID());
-		header.setReceiverID(dto.getReceiverID());
-		header.setTransactionDate(dto.getTransactionDate());
-		header.setRecordCount(dto.getRecordCount());
-		header.setDispositionFlag(dto.getDispositionFlag());
-		return header;
-	}
+    private Header toHeader(HeaderDTO dto) {
+        if (dto == null) return null;
+        
+        Header header = new Header();
+        header.setSenderID(dto.getSenderID());
+        header.setReceiverID(dto.getReceiverID());
+        header.setTransactionDate(dto.getTransactionDate());
+        header.setRecordCount(dto.getRecordCount());
+        header.setDispositionFlag(dto.getDispositionFlag());
+        return header;
+    }
 
-	private Authorization toAuthorization(AuthorizationDTO dto) {
-		if (dto == null) {
-			return null;
-		}
-		Authorization authorization = new Authorization();
-		authorization.setType(dto.getType());
-		authorization.setAuthId(dto.getId());
-		authorization.setMemberID(dto.getMemberID());
-		authorization.setPayerID(dto.getPayerID());
-		authorization.setEmiratesIDNumber(dto.getEmiratesIDNumber());
-		authorization.setDateOrdered(dto.getDateOrdered());
-		authorization.setEncounter(toEncounter(dto.getEncounter()));
+    private Authorization toAuthorization(AuthorizationDTO dto) {
+        if (dto == null) return null;
+        
+        Authorization authorization = new Authorization();
+        authorization.setType(dto.getType());
+        authorization.setAuthId(dto.getId());
+        authorization.setMemberID(dto.getMemberID());
+        authorization.setPayerID(dto.getPayerID());
+        authorization.setEmiratesIDNumber(dto.getEmiratesIDNumber());
+        authorization.setDateOrdered(dto.getDateOrdered());
+        
+        // Handle Encounter
+        Encounter encounter = toEncounter(dto.getEncounter());
+        if (encounter != null) {
+            encounter.setAuthorization(authorization); // Set back-reference
+        }
+        authorization.setEncounter(encounter);
+        
+        // Handle Diagnoses
+        if (dto.getDiagnoses() != null) {
+            List<Diagnosis> diagnosis = dto.getDiagnoses().stream()
+                .map(diagnosisDto -> {
+                    Diagnosis diagnoses = toDiagnosis(diagnosisDto);
+                    diagnoses.setAuthorization(authorization); // Set back-reference
+                    return diagnoses;
+                })
+                .collect(Collectors.toList());
+            authorization.setDiagnosis(diagnosis);
+        } else {
+            authorization.setDiagnosis(new ArrayList<>());
+        }
+        
+        // Handle Activities
+        if (dto.getActivities() != null) {
+            List<Activity> activities = dto.getActivities().stream()
+                .map(activityDto -> {
+                    Activity activity = toActivity(activityDto);
+                    activity.setAuthorization(authorization); // Set back-reference
+                    return activity;
+                })
+                .collect(Collectors.toList());
+            authorization.setActivities(activities);
+        } else {
+            authorization.setActivities(new ArrayList<>());
+        }
+        
+        // Handle Observations (if they're at the authorization level)
+        if (dto.getObservation() != null && !dto.getObservation().isEmpty()) {
+            // If there are no activities, create one
+            if (authorization.getActivities().isEmpty()) {
+                Activity defaultActivity = new Activity();
+                defaultActivity.setAuthorization(authorization);
+                authorization.getActivities().add(defaultActivity);
+            }
+            
+            // Add observations to the first activity
+            Activity firstActivity = authorization.getActivities().get(0);
+            List<Observation> observations = dto.getObservation().stream()
+                .map(obsDto -> {
+                    Observation obs = toObservation(obsDto);
+                    obs.setActivity(firstActivity); // Set back-reference
+                    return obs;
+                })
+                .collect(Collectors.toList());
+            
+            firstActivity.setObservations(observations);
+        }
+        
+        return authorization;
+    }
 
-		List<DiagnosisDTO> diagnosisDTO = dto.getDiagnoses();
-		authorization.setDiagnoses(
-				dto.getDiagnoses() != null ? diagnosisDTO.stream().map(this::toDiagnosis).collect(Collectors.toList())
-						: new ArrayList<>());
+    private Encounter toEncounter(EncounterDTO dto) {
+        if (dto == null) return null;
+        
+        Encounter encounter = new Encounter();
+        encounter.setFacilityID(dto.getFacilityID());
+        encounter.setType(dto.getType());
+        return encounter;
+    }
 
-		List<ActivityDTO> activityDTO = dto.getActivities();
-		authorization.setActivities(
-				dto.getActivities() != null ? activityDTO.stream().map(this::toActivity).collect(Collectors.toList())
-						: new ArrayList<>());
+    private Diagnosis toDiagnosis(DiagnosisDTO dto) {
+        if (dto == null) return null;
+        
+        Diagnosis diagnosis = new Diagnosis();
+        diagnosis.setType(dto.getType());
+        diagnosis.setCode(dto.getCode());
+        return diagnosis;
+    }
 
-		List<ObservationDTO> observationDTO = dto.getObservation();
-		authorization.setObservations(dto.getObservation() != null
-				? observationDTO.stream().map(this::toObservation).collect(Collectors.toList())
-				: new ArrayList<>());
-		return authorization;
-	}
+    private Activity toActivity(ActivityDTO dto) {
+        if (dto == null) return null;
+        
+        Activity activity = new Activity();
+        activity.setActivityId(dto.getId());
+        activity.setStart(dto.getStart());
+        activity.setType(dto.getType());
+        activity.setCode(dto.getCode());
+        activity.setQuantity(dto.getQuantity());
+        activity.setNet(dto.getNet());
+        activity.setClinician(dto.getClinician());
+        
+        // Handle Observations in Activity
+        if (dto.getObservations() != null) {
+            List<Observation> observations = dto.getObservations().stream()
+                .map(obsDto -> {
+                    Observation obs = toObservation(obsDto);
+                    obs.setActivity(activity); // Set back-reference
+                    return obs;
+                })
+                .collect(Collectors.toList());
+            activity.setObservations(observations);
+        } else {
+            activity.setObservations(new ArrayList<>());
+        }
+        
+        return activity;
+    }
 
-	private Encounter toEncounter(EncounterDTO dto) {
-		if (dto == null) {
-			return null;
-		}
-		Encounter encounter = new Encounter();
-		encounter.setFacilityID(dto.getFacilityID());
-		encounter.setType(dto.getType());
-		return encounter;
-	}
-
-	private Diagnosis toDiagnosis(DiagnosisDTO dto) {
-		if (dto == null) {
-			return null;
-		}
-		Diagnosis diagnosis = new Diagnosis();
-		diagnosis.setType(dto.getType());
-		diagnosis.setCode(dto.getCode());
-		return diagnosis;
-	}
-
-	private Activity toActivity(ActivityDTO dto) {
-		if (dto == null) {
-			return null;
-		}
-		Activity activity = new Activity();
-		activity.setActivityId(dto.getId());
-		activity.setStart(dto.getStart());
-		activity.setType(dto.getType());
-		activity.setCode(dto.getCode());
-		activity.setQuantity(dto.getQuantity());
-		activity.setNet(dto.getNet());
-		activity.setClinician(dto.getClinician());
-		List<ObservationDTO> observationDTO = dto.getObservations();
-		activity.setObservations(
-				observationDTO != null ? observationDTO.stream().map(this::toObservation).collect(Collectors.toList())
-						: new ArrayList<Observation>());
-		return activity;
-	}
-
-	private Observation toObservation(ObservationDTO dto) {
-		if (dto == null) {
-			return null;
-		}
-		Observation observation = new Observation();
-		observation.setType(dto.getType());
-		observation.setCode(dto.getCode());
-		observation.setValue(dto.getValue());
-		observation.setValueType(dto.getValueType());
-		return observation;
-	}
+    private Observation toObservation(ObservationDTO dto) {
+        if (dto == null) return null;
+        
+        Observation observation = new Observation();
+        observation.setType(dto.getType());
+        observation.setCode(dto.getCode());
+        observation.setValue(dto.getValue());
+        observation.setValueType(dto.getValueType());
+        return observation;
+    }
 }
+
+
+//package com.ac.dha.utils;
+//
+//import java.util.ArrayList;
+//import java.util.List;
+//import java.util.stream.Collectors;
+//
+//import org.springframework.stereotype.Component;
+//
+//import com.ac.dha.dto.request.ActivityDTO;
+//import com.ac.dha.dto.request.AuthorizationDTO;
+//import com.ac.dha.dto.request.DiagnosisDTO;
+//import com.ac.dha.dto.request.EncounterDTO;
+//import com.ac.dha.dto.request.ErxRequestDTO;
+//import com.ac.dha.dto.request.HeaderDTO;
+//import com.ac.dha.dto.request.ObservationDTO;
+//import com.ac.dha.entities.Activity;
+//import com.ac.dha.entities.Authorization;
+//import com.ac.dha.entities.Diagnosis;
+//import com.ac.dha.entities.Encounter;
+//import com.ac.dha.entities.Header;
+//import com.ac.dha.entities.Observation;
+//import com.ac.dha.entities.PriorRequest;
+//
+//@Component
+//public class ERXEntityMapper {
+//
+//	public PriorRequest toPriorRequest(ErxRequestDTO dto) {
+//		PriorRequest priorRequest = new PriorRequest();
+//		priorRequest.setHeader(toHeader(dto.getHeader()));
+//		priorRequest.setAuthorization(toAuthorization(dto.getAuthorization()));
+//		return priorRequest;
+//	}
+//
+//	private Header toHeader(HeaderDTO dto) {
+//		if (dto == null) {
+//			return null;
+//		}
+//		Header header = new Header();
+//		header.setSenderID(dto.getSenderID());
+//		header.setReceiverID(dto.getReceiverID());
+//		header.setTransactionDate(dto.getTransactionDate());
+//		header.setRecordCount(dto.getRecordCount());
+//		header.setDispositionFlag(dto.getDispositionFlag());
+//		return header;
+//	}
+//
+//	private Authorization toAuthorization(AuthorizationDTO dto) {
+//		if (dto == null) {
+//			return null;
+//		}
+//		Authorization authorization = new Authorization();
+//		authorization.setType(dto.getType());
+//		authorization.setAuthId(dto.getId());
+//		authorization.setMemberID(dto.getMemberID());
+//		authorization.setPayerID(dto.getPayerID());
+//		authorization.setEmiratesIDNumber(dto.getEmiratesIDNumber());
+//		authorization.setDateOrdered(dto.getDateOrdered());
+//		authorization.setEncounter(toEncounter(dto.getEncounter()));
+//
+//		List<DiagnosisDTO> diagnosisDTO = dto.getDiagnoses();
+//		authorization.setDiagnoses(
+//				dto.getDiagnoses() != null ? diagnosisDTO.stream().map(this::toDiagnosis).collect(Collectors.toList())
+//						: new ArrayList<>());
+//
+//		List<ActivityDTO> activityDTO = dto.getActivities();
+//		authorization.setActivities(
+//				dto.getActivities() != null ? activityDTO.stream().map(this::toActivity).collect(Collectors.toList())
+//						: new ArrayList<>());
+//
+//		List<ObservationDTO> observationDTOs = dto.getObservation();
+//		if (observationDTOs != null) {
+//		    // Assuming each authorization has at least one activity
+//		    // You might need to adjust this based on your business logic
+//		    if (!authorization.getActivities().isEmpty()) {
+//		        Activity activity = authorization.getActivities().get(0); // get first activity
+//		        activity.setObservations(
+//		            observationDTOs.stream()
+//		                .map(this::toObservation)
+//		                .peek(obs -> obs.setActivity(activity)) // set the activity reference
+//		                .collect(Collectors.toList())
+//		        );
+//		    } else {
+//		        // Handle case where there are no activities
+//		        Activity newActivity = new Activity();
+//		        newActivity.setObservations(
+//		            observationDTOs.stream()
+//		                .map(this::toObservation)
+//		                .peek(obs -> obs.setActivity(newActivity))
+//		                .collect(Collectors.toList())
+//		        );
+//		        authorization.getActivities().add(newActivity);
+//		    }
+//		}
+//		return authorization;
+//	}
+//
+//	private Encounter toEncounter(EncounterDTO dto) {
+//		if (dto == null) {
+//			return null;
+//		}
+//		Encounter encounter = new Encounter();
+//		encounter.setFacilityID(dto.getFacilityID());
+//		encounter.setType(dto.getType());
+//		return encounter;
+//	}
+//
+//	private Diagnosis toDiagnosis(DiagnosisDTO dto) {
+//		if (dto == null) {
+//			return null;
+//		}
+//		Diagnosis diagnosis = new Diagnosis();
+//		diagnosis.setType(dto.getType());
+//		diagnosis.setCode(dto.getCode());
+//		return diagnosis;
+//	}
+//
+//	private Activity toActivity(ActivityDTO dto) {
+//		if (dto == null) {
+//			return null;
+//		}
+//		Activity activity = new Activity();
+//		activity.setActivityId(dto.getId());
+//		activity.setStart(dto.getStart());
+//		activity.setType(dto.getType());
+//		activity.setCode(dto.getCode());
+//		activity.setQuantity(dto.getQuantity());
+//		activity.setNet(dto.getNet());
+//		activity.setClinician(dto.getClinician());
+//		List<ObservationDTO> observationDTO = dto.getObservations();
+//		activity.setObservations(
+//				observationDTO != null ? observationDTO.stream().map(this::toObservation).collect(Collectors.toList())
+//						: new ArrayList<Observation>());
+//		return activity;
+//	}
+//
+//	private Observation toObservation(ObservationDTO dto) {
+//		if (dto == null) {
+//			return null;
+//		}
+//		Observation observation = new Observation();
+//		observation.setType(dto.getType());
+//		observation.setCode(dto.getCode());
+//		observation.setValue(dto.getValue());
+//		observation.setValueType(dto.getValueType());
+//		return observation;
+//	}
+//}
 
 
 

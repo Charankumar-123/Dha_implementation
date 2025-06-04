@@ -3,6 +3,8 @@ package com.ac.dha.service;
 import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
 
+
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -23,17 +25,23 @@ import com.ac.dha.dto.request.UploadERxAuthorizationForUserDTO;
 import com.ac.dha.dto.request.UploadERxRequestDTO;
 import com.ac.dha.dto.request.UploadERxRequestForUserDTO;
 import com.ac.dha.entities.PriorRequest;
+import com.ac.dha.repository.AuthorizationRepository;
 import com.ac.dha.repository.EclaimRepository;
+import com.ac.dha.repository.HeaderRepository;
 import com.ac.dha.utils.ERXEntityMapper;
 import com.ac.dha.utils.EclaimHttpResponse;
 import com.ac.dha.utils.XmlUtil;
+import org.slf4j.Logger;
+
+
 
 @Service
 public class EClaimService {
-	
+	public static final Logger log = LoggerFactory.getLogger(EClaimService.class);
+
 	@Autowired
 	private EclaimRepository eclaimRepository;
-	
+
 	@Autowired
 	private ERXEntityMapper entityMapper;
 
@@ -48,35 +56,44 @@ public class EClaimService {
 	@Autowired
 	private EclaimHttpResponse eclaimHttpResponse; // work and test during API testing
 
+//	@Autowired
+//	private AuthorizationRepository authorizationRepository;
+//	
+//	@Autowired
+//	private HeaderRepository headerRepository;
+
 	public ResponseEntity<String> sendPriorRequestToEclaim(ErxRequestDTO priorRequest) {
 		try {
-//			System.out.println("Req Format " + priorRequest.getAuthorization());
-			System.out.println("XML Format " + xmlUtil.convertToXml(priorRequest));
+			log.info("Req Format ", priorRequest.getAuthorization());
+			log.debug("XML Format ", xmlUtil.convertToXml(priorRequest));
 			byte[] xmlPayload = xmlUtil.convertToXml(priorRequest);
-			System.out.println("XML Payload byte[] length: " + xmlPayload.length);
+			log.debug("XML Payload byte[] length: ", xmlPayload.length);
 			String xmlString = new String(xmlPayload, StandardCharsets.UTF_8);
-			System.out.println("XML Payload as String:\n" + xmlString);
-			
+			log.debug("XML Payload as String:\n", xmlString);
+
+			// Convert DTO to Entity and Save to Database
 			PriorRequest entity = entityMapper.toPriorRequest(priorRequest);
 			eclaimRepository.save(entity);
+			log.info("PriorRequest saved to database with ID: {}", entity.getId());
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_XML);
 			HttpEntity<byte[]> requestEntity = new HttpEntity<>(xmlPayload, headers);
-			
-			// Use the injected URL from application.properties
+
 			ResponseEntity<String> response = restTemplate.postForEntity(eclaimUrl, requestEntity, String.class);
 
-			System.out.println("Response Status Code: " + response.getStatusCodeValue());
-			System.out.println("Response Body:\n" + response.getBody());
+			log.info("Response Status Code: ", response.getStatusCodeValue());
+			log.info("Response Body:\n", response.getBody());
 
 			return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Exception in sendPriorRequestToEclaim: ", e);
 			return ResponseEntity.status(500).body("Error: " + e.getMessage());
 		}
 	}
+
+	
 
 	public ResponseEntity<String> uploadERxRequest(UploadERxRequestForUserDTO requestFromUser) {
 		try {
