@@ -2,11 +2,9 @@ package com.ac.dha.service;
 
 import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
-import java.util.Formatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,11 +22,20 @@ import com.ac.dha.dto.request.UploadERxAuthorizationDTO;
 import com.ac.dha.dto.request.UploadERxAuthorizationForUserDTO;
 import com.ac.dha.dto.request.UploadERxRequestDTO;
 import com.ac.dha.dto.request.UploadERxRequestForUserDTO;
+import com.ac.dha.entities.PriorRequest;
+import com.ac.dha.repository.EclaimRepository;
+import com.ac.dha.utils.ERXEntityMapper;
 import com.ac.dha.utils.EclaimHttpResponse;
 import com.ac.dha.utils.XmlUtil;
 
 @Service
 public class EClaimService {
+	
+	@Autowired
+	private EclaimRepository eclaimRepository;
+	
+	@Autowired
+	private ERXEntityMapper entityMapper;
 
 	private final RestTemplate restTemplate = new RestTemplate();
 
@@ -49,11 +56,14 @@ public class EClaimService {
 			System.out.println("XML Payload byte[] length: " + xmlPayload.length);
 			String xmlString = new String(xmlPayload, StandardCharsets.UTF_8);
 			System.out.println("XML Payload as String:\n" + xmlString);
+			
+			PriorRequest entity = entityMapper.toPriorRequest(priorRequest);
+			eclaimRepository.save(entity);
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_XML);
 			HttpEntity<byte[]> requestEntity = new HttpEntity<>(xmlPayload, headers);
-
+			
 			// Use the injected URL from application.properties
 			ResponseEntity<String> response = restTemplate.postForEntity(eclaimUrl, requestEntity, String.class);
 
