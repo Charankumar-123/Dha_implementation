@@ -21,6 +21,11 @@ public class Activity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name = "uniq_id")
+	// @CustomUniqueCode(entityType = "clinicalEditHistory", prefix = "ECPR",
+	// numberWidth = 10)
+	private String uniqId;
+
 	@Column(name = "activity_id")
 	private String activityId;
 
@@ -35,8 +40,6 @@ public class Activity {
 	private double net;
 
 	private String clinician;
-	
-	public Activity() {}
 
 	@ManyToOne
 	@JoinColumn(name = "authorization_id")
@@ -46,12 +49,38 @@ public class Activity {
 	@JoinColumn(name = "activity_id", referencedColumnName = "id")
 	private List<Observation> observations;
 
+	public Activity() {
+	}
+
+	public Activity(Long id, String uniqId, String activityId, String start, String type, String code, int quantity,
+			double net, String clinician, Authorization authorization, List<Observation> observations) {
+		this.id = id;
+		this.uniqId = uniqId;
+		this.activityId = activityId;
+		this.start = start;
+		this.type = type;
+		this.code = code;
+		this.quantity = quantity;
+		this.net = net;
+		this.clinician = clinician;
+		this.authorization = authorization;
+		this.observations = observations;
+	}
+
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getUniqId() {
+		return uniqId;
+	}
+
+	public void setUniqId(String uniqId) {
+		this.uniqId = uniqId;
 	}
 
 	public String getActivityId() {
@@ -126,26 +155,10 @@ public class Activity {
 		this.observations = observations;
 	}
 
-	public Activity(Long id, String activityId, String start, String type, String code, int quantity, double net,
-			String clinician, Authorization authorization, List<Observation> observations) {
-		super();
-		this.id = id;
-		this.activityId = activityId;
-		this.start = start;
-		this.type = type;
-		this.code = code;
-		this.quantity = quantity;
-		this.net = net;
-		this.clinician = clinician;
-		this.authorization = authorization;
-		this.observations = observations;
-	}
-
 	@Override
 	public String toString() {
-		return "Activity [id=" + id + ", activityId=" + activityId + ", start=" + start + ", type=" + type + ", code="
-				+ code + ", quantity=" + quantity + ", net=" + net + ", clinician=" + clinician + ", authorization="
-				+ authorization + ", observations=" + observations + "]";
+		return "Activity [id=" + id + ", uniqId=" + uniqId + ", activityId=" + activityId + ", start=" + start
+				+ ", type=" + type + ", code=" + code + ", quantity=" + quantity + ", net=" + net + ", clinician="
+				+ clinician + ", authorization=" + authorization + ", observations=" + observations + "]";
 	}
-
 }

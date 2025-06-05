@@ -23,11 +23,16 @@ public class Authorization {
 
 	private String type;
 
+	@Column(name = "uniq_id")
+	// @CustomUniqueCode(entityType = "clinicalEditHistory", prefix = "ECPR",
+	// numberWidth = 10)
+	private String uniqId;
+
 	@Column(name = "authorization_id")
 	private String authorizationId;
 
-	@Column(name = "member_id")
-	private String memberID;
+	@Column(name = "patient_member_id")
+	private String patientMemberID;
 
 	@Column(name = "payer_id")
 	private String payerID;
@@ -51,10 +56,28 @@ public class Authorization {
 	private List<Activity> activities;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "authorization_id")
-    private List<Observation> observations;
-	
-	public Authorization() {}
+	@JoinColumn(name = "authorization_id")
+	private List<Observation> observations;
+
+	public Authorization() {
+	}
+
+	public Authorization(Long id, String type, String uniqId, String authorizationId, String patientMemberID,
+			String payerID, String emiratesIDNumber, String dateOrdered, Encounter encounter, List<Diagnosis> diagnoses,
+			List<Activity> activities, List<Observation> observations) {
+		this.id = id;
+		this.type = type;
+		this.uniqId = uniqId;
+		this.authorizationId = authorizationId;
+		this.patientMemberID = patientMemberID;
+		this.payerID = payerID;
+		this.emiratesIDNumber = emiratesIDNumber;
+		this.dateOrdered = dateOrdered;
+		this.encounter = encounter;
+		this.diagnoses = diagnoses;
+		this.activities = activities;
+		this.observations = observations;
+	}
 
 	public Long getId() {
 		return id;
@@ -72,6 +95,14 @@ public class Authorization {
 		this.type = type;
 	}
 
+	public String getUniqId() {
+		return uniqId;
+	}
+
+	public void setUniqId(String uniqId) {
+		this.uniqId = uniqId;
+	}
+
 	public String getAuthorizationId() {
 		return authorizationId;
 	}
@@ -80,12 +111,12 @@ public class Authorization {
 		this.authorizationId = authorizationId;
 	}
 
-	public String getMemberID() {
-		return memberID;
+	public String getPatientMemberID() {
+		return patientMemberID;
 	}
 
-	public void setMemberID(String memberID) {
-		this.memberID = memberID;
+	public void setPatientMemberID(String patientMemberID) {
+		this.patientMemberID = patientMemberID;
 	}
 
 	public String getPayerID() {
@@ -144,30 +175,16 @@ public class Authorization {
 		this.observations = observations;
 	}
 
-	@Override
-	public String toString() {
-		return "Authorization [id=" + id + ", type=" + type + ", authorizationId=" + authorizationId + ", memberID="
-				+ memberID + ", payerID=" + payerID + ", emiratesIDNumber=" + emiratesIDNumber + ", dateOrdered="
-				+ dateOrdered + ", encounter=" + encounter + ", diagnoses=" + diagnoses + ", activities=" + activities
-				+ ", observations=" + observations + "]";
+	public void addObservation(Observation observation) {
+		observations.add(observation);
+		observation.setAuthorizationId(this);
 	}
 
-	public Authorization(Long id, String type, String authorizationId, String memberID, String payerID,
-			String emiratesIDNumber, String dateOrdered, Encounter encounter, List<Diagnosis> diagnoses,
-			List<Activity> activities, List<Observation> observations) {
-		super();
-		this.id = id;
-		this.type = type;
-		this.authorizationId = authorizationId;
-		this.memberID = memberID;
-		this.payerID = payerID;
-		this.emiratesIDNumber = emiratesIDNumber;
-		this.dateOrdered = dateOrdered;
-		this.encounter = encounter;
-		this.diagnoses = diagnoses;
-		this.activities = activities;
-		this.observations = observations;
+	@Override
+	public String toString() {
+		return "Authorization [id=" + id + ", type=" + type + ", uniqId=" + uniqId + ", authorizationId="
+				+ authorizationId + ", patientMemberID=" + patientMemberID + ", payerID=" + payerID
+				+ ", emiratesIDNumber=" + emiratesIDNumber + ", dateOrdered=" + dateOrdered + ", encounter=" + encounter
+				+ ", diagnoses=" + diagnoses + ", activities=" + activities + ", observations=" + observations + "]";
 	}
-	
-	
 }

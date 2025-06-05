@@ -2,6 +2,7 @@ package com.ac.dha.entties;
 
 import java.util.Arrays;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +17,11 @@ public class UploadERxRequest {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name = "uniq_id")
+	// @CustomUniqueCode(entityType = "uploadERxRequest", prefix = "ERX",
+	// numberWidth = 10)
+	private String uniqId;
+
 	private String facilityLogin;
 
 	private String facilityPwd;
@@ -26,7 +32,7 @@ public class UploadERxRequest {
 
 	private byte[] fileContent;
 
-	private String fileName;
+	private String fileName; // priorRequestUniqId
 
 	public Long getId() {
 		return id;
@@ -34,6 +40,14 @@ public class UploadERxRequest {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getUniqId() {
+		return uniqId;
+	}
+
+	public void setUniqId(String uniqId) {
+		this.uniqId = uniqId;
 	}
 
 	public String getFacilityLogin() {
@@ -84,10 +98,11 @@ public class UploadERxRequest {
 		this.fileName = fileName;
 	}
 
-	public UploadERxRequest(Long id, String facilityLogin, String facilityPwd, String clinicianLogin,
+	public UploadERxRequest(Long id, String uniqId, String facilityLogin, String facilityPwd, String clinicianLogin,
 			String clinicianPwd, byte[] fileContent, String fileName) {
 		super();
 		this.id = id;
+		this.uniqId = uniqId;
 		this.facilityLogin = facilityLogin;
 		this.facilityPwd = facilityPwd;
 		this.clinicianLogin = clinicianLogin;
@@ -96,11 +111,13 @@ public class UploadERxRequest {
 		this.fileName = fileName;
 	}
 
-	@Override
-	public String toString() {
-		return "UploadERxRequest [id=" + id + ", facilityLogin=" + facilityLogin + ", facilityPwd=" + facilityPwd
-				+ ", clinicianLogin=" + clinicianLogin + ", clinicianPwd=" + clinicianPwd + ", fileContent="
-				+ Arrays.toString(fileContent) + ", fileName=" + fileName + "]";
+	public UploadERxRequest() {
 	}
 
+	@Override
+	public String toString() {
+		return "UploadERxRequest [id=" + id + ", uniqId=" + uniqId + ", facilityLogin=" + facilityLogin
+				+ ", facilityPwd=" + facilityPwd + ", clinicianLogin=" + clinicianLogin + ", clinicianPwd="
+				+ clinicianPwd + ", fileContent=" + Arrays.toString(fileContent) + ", fileName=" + fileName + "]";
+	}
 }

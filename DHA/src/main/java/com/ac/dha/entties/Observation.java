@@ -17,14 +17,16 @@ public class Observation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name = "uniq_id")
+	// @CustomUniqueCode(entityType = "clinicalEditHistory", prefix = "ECPR",
+	// numberWidth = 10)
+	private String uniqId;
+
 	private String type;
 
 	private String code;
 
 	private String value;
-
-	public Observation() {
-	}
 
 	@Column(name = "value_type")
 	private String valueType;
@@ -35,7 +37,22 @@ public class Observation {
 
 	@ManyToOne
 	@JoinColumn(name = "authorization_id")
-	private Authorization authorization;
+	private Authorization authorizationId;
+
+	public Observation() {
+	}
+
+	public Observation(Long id, String uniqId, String type, String code, String value, String valueType,
+			Activity activity, Authorization authorizationId) {
+		this.id = id;
+		this.uniqId = uniqId;
+		this.type = type;
+		this.code = code;
+		this.value = value;
+		this.valueType = valueType;
+		this.activity = activity;
+		this.authorizationId = authorizationId;
+	}
 
 	public Long getId() {
 		return id;
@@ -43,6 +60,14 @@ public class Observation {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getUniqId() {
+		return uniqId;
+	}
+
+	public void setUniqId(String uniqId) {
+		this.uniqId = uniqId;
 	}
 
 	public String getType() {
@@ -85,31 +110,17 @@ public class Observation {
 		this.activity = activity;
 	}
 
-	public Authorization getAuthorization() {
-		return authorization;
+	public Authorization getAuthorizationId() {
+		return authorizationId;
 	}
 
-	public void setAuthorization(Authorization authorization) {
-		this.authorization = authorization;
+	public void setAuthorizationId(Authorization authorizationId) {
+		this.authorizationId = authorizationId;
 	}
 
 	@Override
 	public String toString() {
-		return "Observation [id=" + id + ", type=" + type + ", code=" + code + ", value=" + value + ", valueType="
-				+ valueType + ", activity=" + activity + ", authorization=" + authorization + "]";
+		return "Observation [id=" + id + ", uniqId=" + uniqId + ", type=" + type + ", code=" + code + ", value=" + value
+				+ ", valueType=" + valueType + ", activity=" + activity + ", authorizationId=" + authorizationId + "]";
 	}
-
-	public Observation(Long id, String type, String code, String value, String valueType, Activity activity,
-			Authorization authorization) {
-		super();
-		this.id = id;
-		this.type = type;
-		this.code = code;
-		this.value = value;
-		this.valueType = valueType;
-		this.activity = activity;
-		this.authorization = authorization;
-	}
-
-	
 }

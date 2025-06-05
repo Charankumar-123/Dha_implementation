@@ -9,12 +9,12 @@ import lombok.Data;
 @Data
 public class UploadERxRequestResponseDTO {
 
-    @XmlElement(name = "ERxReferenceNo")
-    private int eRxReferenceNo;
+	@XmlElement(name = "ERxReferenceNo")
+	private int eRxReferenceNo;
 
-    @XmlElement(name = "ErrorMessage")
-    private String errorMessage;
+	@XmlElement(name = "ErrorMessage")
+	private String errorMessage;
 
-    @XmlElement(name = "ErrorReport")
-    private byte[] errorReport;
+	@XmlElement(name = "ErrorReport")
+	private byte[] errorReport;
 }

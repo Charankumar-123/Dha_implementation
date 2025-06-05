@@ -15,6 +15,18 @@ public class Header {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name = "uniq_id")
+	// @CustomUniqueCode(entityType = "clinicalEditHistory", prefix = "ECPR",
+	// numberWidth = 10)
+	private String uniqId;
+
+	@Column(name = "create_by")
+	private String createBy;
+
+	@Column(name = "create_on")
+	// @EpochTime
+	private Long createOn;
+
 	@Column(name = "sender_id")
 	private String senderID;
 
@@ -29,8 +41,22 @@ public class Header {
 
 	@Column(name = "disposition_flag")
 	private String dispositionFlag;
-	
-	public Header() {}
+
+	public Header() {
+	}
+
+	public Header(Long id, String uniqId, String createBy, Long createOn, String senderID, String receiverID,
+			String transactionDate, int recordCount, String dispositionFlag) {
+		this.id = id;
+		this.uniqId = uniqId;
+		this.createBy = createBy;
+		this.createOn = createOn;
+		this.senderID = senderID;
+		this.receiverID = receiverID;
+		this.transactionDate = transactionDate;
+		this.recordCount = recordCount;
+		this.dispositionFlag = dispositionFlag;
+	}
 
 	public Long getId() {
 		return id;
@@ -38,6 +64,30 @@ public class Header {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getUniqId() {
+		return uniqId;
+	}
+
+	public void setUniqId(String uniqId) {
+		this.uniqId = uniqId;
+	}
+
+	public String getCreateBy() {
+		return createBy;
+	}
+
+	public void setCreateBy(String createBy) {
+		this.createBy = createBy;
+	}
+
+	public Long getCreateOn() {
+		return createOn;
+	}
+
+	public void setCreateOn(Long createOn) {
+		this.createOn = createOn;
 	}
 
 	public String getSenderID() {
@@ -80,21 +130,10 @@ public class Header {
 		this.dispositionFlag = dispositionFlag;
 	}
 
-	public Header(Long id, String senderID, String receiverID, String transactionDate, int recordCount,
-			String dispositionFlag) {
-		super();
-		this.id = id;
-		this.senderID = senderID;
-		this.receiverID = receiverID;
-		this.transactionDate = transactionDate;
-		this.recordCount = recordCount;
-		this.dispositionFlag = dispositionFlag;
-	}
-
 	@Override
 	public String toString() {
-		return "Header [id=" + id + ", senderID=" + senderID + ", receiverID=" + receiverID + ", transactionDate="
-				+ transactionDate + ", recordCount=" + recordCount + ", dispositionFlag=" + dispositionFlag + "]";
+		return "Header [id=" + id + ", uniqId=" + uniqId + ", createBy=" + createBy + ", createOn=" + createOn
+				+ ", senderID=" + senderID + ", receiverID=" + receiverID + ", transactionDate=" + transactionDate
+				+ ", recordCount=" + recordCount + ", dispositionFlag=" + dispositionFlag + "]";
 	}
-
 }
