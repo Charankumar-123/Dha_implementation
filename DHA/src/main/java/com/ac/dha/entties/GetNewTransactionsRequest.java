@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "getNewTransactionsRequest")
+@Table(name = "tbl_eclaim_getNewTrxReq")
 public class GetNewTransactionsRequest {
 
 	@Id

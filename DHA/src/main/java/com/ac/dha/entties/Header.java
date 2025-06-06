@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "header")
+@Table(name = "tbl_eclaim_header")
 public class Header {
 
 	@Id

@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "setTransactionDownloadedRequest")
+@Table(name = "tbl_eclaim_setTrxDwRq")
 public class SetTransactionDownloadedRequest {
 
 	@Id

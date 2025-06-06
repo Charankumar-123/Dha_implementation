@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "uploadERxRequests")
+@Table(name = "tbl_eclaim_GeteRxTrxReq")
 public class GeteRxTransactionReques {
 
 	@Id
@@ -20,7 +20,7 @@ public class GeteRxTransactionReques {
 
 	private String memberID;
 
-	private int eRxReferenceNo;
+//	private int eRxReferenceNo;
 
 	public Long getId() {
 		return id;
@@ -54,27 +54,27 @@ public class GeteRxTransactionReques {
 		this.memberID = memberID;
 	}
 
-	public int geteRxReferenceNo() {
-		return eRxReferenceNo;
-	}
-
-	public void seteRxReferenceNo(int eRxReferenceNo) {
-		this.eRxReferenceNo = eRxReferenceNo;
-	}
+//	public int geteRxReferenceNo() {
+//		return eRxReferenceNo;
+//	}
+//
+//	public void seteRxReferenceNo(int eRxReferenceNo) {
+//		this.eRxReferenceNo = eRxReferenceNo;
+//	}
 
 	@Override
 	public String toString() {
 		return "GeteRxTransactionReques [id=" + id + ", login=" + login + ", pwd=" + pwd + ", memberID=" + memberID
-				+ ", eRxReferenceNo=" + eRxReferenceNo + "]";
+				+  "]";
 	}
 
-	public GeteRxTransactionReques(Long id, String login, String pwd, String memberID, int eRxReferenceNo) {
+	public GeteRxTransactionReques(Long id, String login, String pwd, String memberID) {
 		super();
 		this.id = id;
 		this.login = login;
 		this.pwd = pwd;
 		this.memberID = memberID;
-		this.eRxReferenceNo = eRxReferenceNo;
+//		this.eRxReferenceNo = eRxReferenceNo;
 	}
 
 }

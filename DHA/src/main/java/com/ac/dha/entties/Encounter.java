@@ -9,7 +9,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "encounter")
+@Table(name = "tbl_eclaim_encounter")
 public class Encounter {
 
 	@Id

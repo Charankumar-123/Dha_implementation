@@ -23,9 +23,10 @@ public class XmlUtil {
 		return baos.toByteArray();
 	}
 	
-	public <T> T fromXml(String xml, Class<T> clazz) throws JAXBException {
+	@SuppressWarnings("unchecked")
+	public static <T> T fromXml(String xml, Class<T> clazz) throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(clazz);
         Unmarshaller unmarshaller = context.createUnmarshaller();
-        return clazz.cast(unmarshaller.unmarshal(new StringReader(xml)));
+        return (T) unmarshaller.unmarshal(new StringReader(xml));
     }
 }

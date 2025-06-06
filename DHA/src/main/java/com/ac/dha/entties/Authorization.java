@@ -14,7 +14,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "auth_name")
+@Table(name = "tbl_eclaim_auth")
 public class Authorization {
 
 	@Id

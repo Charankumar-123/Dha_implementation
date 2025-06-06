@@ -14,7 +14,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "activity")
+@Table(name = "tbl_eclaim_activity")
 public class Activity {
 
 	@Id
@@ -26,8 +26,8 @@ public class Activity {
 	// numberWidth = 10)
 	private String uniqId;
 
-	@Column(name = "activity_id")
-	private String activityId;
+//	@Column(name = "activity_id")
+//	private String activityId;
 
 	private String start;
 
@@ -52,11 +52,11 @@ public class Activity {
 	public Activity() {
 	}
 
-	public Activity(Long id, String uniqId, String activityId, String start, String type, String code, int quantity,
+	public Activity(Long id, String uniqId, String start, String type, String code, int quantity,
 			double net, String clinician, Authorization authorization, List<Observation> observations) {
 		this.id = id;
 		this.uniqId = uniqId;
-		this.activityId = activityId;
+//		this.activityId = activityId;
 		this.start = start;
 		this.type = type;
 		this.code = code;
@@ -83,13 +83,13 @@ public class Activity {
 		this.uniqId = uniqId;
 	}
 
-	public String getActivityId() {
-		return activityId;
-	}
-
-	public void setActivityId(String activityId) {
-		this.activityId = activityId;
-	}
+//	public String getActivityId() {
+//		return activityId;
+//	}
+//
+//	public void setActivityId(String activityId) {
+//		this.activityId = activityId;
+//	}
 
 	public String getStart() {
 		return start;
@@ -157,7 +157,7 @@ public class Activity {
 
 	@Override
 	public String toString() {
-		return "Activity [id=" + id + ", uniqId=" + uniqId + ", activityId=" + activityId + ", start=" + start
+		return "Activity [id=" + id + ", uniqId=" + uniqId + ", activityId="  + ", start=" + start
 				+ ", type=" + type + ", code=" + code + ", quantity=" + quantity + ", net=" + net + ", clinician="
 				+ clinician + ", authorization=" + authorization + ", observations=" + observations + "]";
 	}

@@ -55,6 +55,7 @@ public class ERXEntityMapper {
 		authorization.setEmiratesIDNumber(dto.getEmiratesIDNumber());
 		authorization.setDateOrdered(dto.getDateOrdered());
 		authorization.setEncounter(toEncounter(dto.getEncounter()));
+//		  UUID.randomUUID();
 
 //		List<Diagnosis> diagnosisDTO = dto.getDiagnoses();
 //		authorization.setDiagnoses(diagnosisDTO != null

@@ -7,37 +7,46 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
-@Table(name = "uploadERxRequests")
+@Data
+@Table(name = "tbl_eclaim_uploadERxReq")
 public class UploadERxRequest {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "uniq_id")
-	// @CustomUniqueCode(entityType = "uploadERxRequest", prefix = "ERX",
-	// numberWidth = 10)
+	@Column(name = "uniq_id", nullable = false)
 	private String uniqId;
 
+	@Column(name = "facility_login")
 	private String facilityLogin;
 
+	@Column(name = "facility_pwd")
 	private String facilityPwd;
 
+	@Column(name = "clinician_login")
 	private String clinicianLogin;
 
+	@Column(name = "clinician_pwd")
 	private String clinicianPwd;
 
+	@Column(name = "file_name")
+	private String fileName;
+
+	@Column(name = "file_content")
 	private byte[] fileContent;
 
-	private String fileName; // priorRequestUniqId
+//	@Column(name = "e_rx_reference_no", nullable = false) // Corrected column name
+//	private Integer eRxReferenceNo;
 
 	public Long getId() {
 		return id;
 	}
-
+	
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -82,14 +91,6 @@ public class UploadERxRequest {
 		this.clinicianPwd = clinicianPwd;
 	}
 
-	public byte[] getFileContent() {
-		return fileContent;
-	}
-
-	public void setFileContent(byte[] fileContent) {
-		this.fileContent = fileContent;
-	}
-
 	public String getFileName() {
 		return fileName;
 	}
@@ -98,8 +99,33 @@ public class UploadERxRequest {
 		this.fileName = fileName;
 	}
 
+	public byte[] getFileContent() {
+		return fileContent;
+	}
+
+	public void setFileContent(byte[] fileContent) {
+		this.fileContent = fileContent;
+	}
+
+//	public Integer geteRxReferenceNo() {
+//		return eRxReferenceNo;
+//	}
+//
+//	public void seteRxReferenceNo(Integer eRxReferenceNo) {
+//		this.eRxReferenceNo = eRxReferenceNo;
+//	}
+
+	@Override
+	public String toString() {
+		return "UploadERxRequest [id=" + id + ", uniqId=" + uniqId + ", facilityLogin=" + facilityLogin
+				+ ", facilityPwd=" + facilityPwd + ", clinicianLogin=" + clinicianLogin + ", clinicianPwd="
+				+ clinicianPwd + ", fileName=" + fileName + ", fileContent=" + Arrays.toString(fileContent)
+				+ "]";
+		//", eRxReferenceNo=" + eRxReferenceNo + 
+	}
+
 	public UploadERxRequest(Long id, String uniqId, String facilityLogin, String facilityPwd, String clinicianLogin,
-			String clinicianPwd, byte[] fileContent, String fileName) {
+			String clinicianPwd, String fileName, byte[] fileContent) {
 		super();
 		this.id = id;
 		this.uniqId = uniqId;
@@ -107,17 +133,13 @@ public class UploadERxRequest {
 		this.facilityPwd = facilityPwd;
 		this.clinicianLogin = clinicianLogin;
 		this.clinicianPwd = clinicianPwd;
-		this.fileContent = fileContent;
 		this.fileName = fileName;
+		this.fileContent = fileContent;
+//		this.eRxReferenceNo = eRxReferenceNo;
 	}
 
 	public UploadERxRequest() {
+		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public String toString() {
-		return "UploadERxRequest [id=" + id + ", uniqId=" + uniqId + ", facilityLogin=" + facilityLogin
-				+ ", facilityPwd=" + facilityPwd + ", clinicianLogin=" + clinicianLogin + ", clinicianPwd="
-				+ clinicianPwd + ", fileContent=" + Arrays.toString(fileContent) + ", fileName=" + fileName + "]";
-	}
 }

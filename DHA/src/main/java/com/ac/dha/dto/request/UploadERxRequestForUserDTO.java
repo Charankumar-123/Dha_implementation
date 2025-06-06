@@ -1,8 +1,9 @@
 package com.ac.dha.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
 
 //@Data
 //@AllArgsConstructor
@@ -12,22 +13,41 @@ import jakarta.xml.bind.annotation.XmlElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class UploadERxRequestForUserDTO {
 
-	@XmlElement(name = "FacilityLogin")
-	private String facilityLogin;
+	@JsonProperty("facilityLogin")
+    private String facilityLogin;
 
-	@XmlElement(name = "FacilityPwd")
-	private String facilityPwd;
+    @JsonProperty("facilityPwd")
+    private String facilityPwd;
 
-	@XmlElement(name = "ClinicianLogin")
-	private String clinicianLogin;
+    @JsonProperty("clinicianLogin")
+    private String clinicianLogin;
 
-	@XmlElement(name = "ClinicianPwd")
-	private String clinicianPwd;
+    @JsonProperty("clinicianPwd")
+    private String clinicianPwd;
 
-	@XmlElement(name = "FileName")
-	private String fileName;
+    @JsonProperty("fileName")
+    private String fileName;
 
-	private ErxRequestDTO priorRequest;
+    @JsonProperty("priorRequest")
+    private ErxRequestDTO priorRequest;
+
+    public UploadERxRequestForUserDTO() {} // Required no-arg constructor
+
+    public UploadERxRequestForUserDTO(String facilityLogin, String facilityPwd, String clinicianLogin,
+                                      String clinicianPwd, String fileName, ErxRequestDTO priorRequest) {
+        this.facilityLogin = facilityLogin;
+        this.facilityPwd = facilityPwd;
+        this.clinicianLogin = clinicianLogin;
+        this.clinicianPwd = clinicianPwd;
+        this.fileName = fileName;
+        this.priorRequest = priorRequest;
+    }
+	@Override
+	public String toString() {
+		return "UploadERxRequestForUserDTO [facilityLogin=" + facilityLogin + ", facilityPwd=" + facilityPwd
+				+ ", clinicianLogin=" + clinicianLogin + ", clinicianPwd=" + clinicianPwd + ", fileName=" + fileName
+				+ ", priorRequest=" + priorRequest + "]";
+	}
 
 	public String getFacilityLogin() {
 		return facilityLogin;
@@ -76,23 +96,6 @@ public class UploadERxRequestForUserDTO {
 	public void setPriorRequest(ErxRequestDTO priorRequest) {
 		this.priorRequest = priorRequest;
 	}
-
-	public UploadERxRequestForUserDTO(String facilityLogin, String facilityPwd, String clinicianLogin,
-			String clinicianPwd, String fileName, ErxRequestDTO priorRequest) {
-		super();
-		this.facilityLogin = facilityLogin;
-		this.facilityPwd = facilityPwd;
-		this.clinicianLogin = clinicianLogin;
-		this.clinicianPwd = clinicianPwd;
-		this.fileName = fileName;
-		this.priorRequest = priorRequest;
-	}
-
-	@Override
-	public String toString() {
-		return "UploadERxRequestForUserDTO [facilityLogin=" + facilityLogin + ", facilityPwd=" + facilityPwd
-				+ ", clinicianLogin=" + clinicianLogin + ", clinicianPwd=" + clinicianPwd + ", fileName=" + fileName
-				+ ", priorRequest=" + priorRequest + "]";
-	}
+	
 
 }

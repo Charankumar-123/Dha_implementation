@@ -25,12 +25,16 @@ import com.ac.dha.dto.request.UploadERxAuthorizationDTO;
 import com.ac.dha.dto.request.UploadERxAuthorizationForUserDTO;
 import com.ac.dha.dto.request.UploadERxRequestDTO;
 import com.ac.dha.dto.request.UploadERxRequestForUserDTO;
-import com.ac.dha.dto.response.UploadERxAuthorizationResponseDTO;
+import com.ac.dha.dto.response.UploadERxRequestResponseDTO;
 import com.ac.dha.entties.PriorRequest;
+import com.ac.dha.entties.UploadERxRequest;
+import com.ac.dha.repository.GeteRxTransactionRequesRepository;
 import com.ac.dha.repository.PriorRequestRepository;
+import com.ac.dha.repository.UploadERxRequestRepository;
 import com.ac.dha.utils.ERXEntityMapper;
-import com.ac.dha.utils.EclaimHttpResponse;
+import com.ac.dha.utils.Generator;
 import com.ac.dha.utils.XmlUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.xml.bind.JAXBException;
 
@@ -39,6 +43,8 @@ public class EClaimService {
 
 	public static final Logger log = LoggerFactory.getLogger(EClaimService.class);
 
+	private final ObjectMapper objectMapper = new ObjectMapper();
+
 	@Autowired
 	private ExternalServiceClient externalServiceClient;
 
@@ -46,6 +52,12 @@ public class EClaimService {
 
 	@Autowired
 	private PriorRequestRepository priorRequestRepository;
+
+	@Autowired
+	private UploadERxRequestRepository uploadERxRequestRepository;
+
+	@Autowired
+	private GeteRxTransactionRequesRepository transactionRepository;
 
 	@Value("${eclaim.endpoint.url}")
 	private String eclaimUrl;
@@ -57,16 +69,22 @@ public class EClaimService {
 	private XmlUtil xmlUtil;
 
 	@Autowired
-	private EclaimHttpResponse eclaimHttpResponse;
+	private Generator generator;
 
 	public ResponseEntity<String> sendPriorRequestToEclaim(ErxRequestDTO priorRequest) {
 		try {
 			log.info("Req Format ", priorRequest.getAuthorization());
 			log.debug("XML Format ", xmlUtil.convertToXml(priorRequest));
 			byte[] xmlPayload = xmlUtil.convertToXml(priorRequest);
-			log.debug("XML Payload byte[] length: ", xmlPayload.length);
-			String xmlString = new String(xmlPayload, StandardCharsets.UTF_8);
-			log.debug("XML Payload as String:\n", xmlString);
+			System.out.println("Convert XML to byte[]\n------------>" + xmlPayload);
+
+			System.out.println("XML Payload byte[] length: " + xmlPayload.length);
+//			log.debug("Convert XML to byte[] ------>" + xmlPayload.toString());
+//			System.out.println("Convert XML to byte[]\n------------>" + xmlPayload);
+
+			String xmlFormat = new String(xmlPayload, StandardCharsets.UTF_8);
+			System.out.println(" XML Payload as String:\n ------>" + xmlFormat);
+//			String xmlString = new String(xmlPayload, StandardCharsets.UTF_8);
 
 			// Convert DTO to Entity and Save to Database
 			PriorRequest entity = dtoToEntityMapper.toPriorRequest(priorRequest);
@@ -90,86 +108,91 @@ public class EClaimService {
 		}
 	}
 
-	public ResponseEntity<UploadERxAuthorizationResponseDTO> uploadERxRequest(
-			UploadERxRequestForUserDTO requestFromUser) {
+
+	public ResponseEntity<String> uploadERxRequest(UploadERxRequestForUserDTO requestFromUser) {
 		try {
-			log.info("uploadERxRequest called with: {}", requestFromUser);
+			log.info("uploadERxRequest called");
+
+			// Validate required fields
 			if (requestFromUser == null || requestFromUser.getPriorRequest() == null
 					|| requestFromUser.getFileName() == null) {
 				String errorMsg = requestFromUser == null ? "Request body is null"
 						: requestFromUser.getPriorRequest() == null ? "priorRequest is null" : "fileName is null";
-				log.warn("Error: ", errorMsg);
-				return ResponseEntity.status(400).body(new UploadERxAuthorizationResponseDTO() {
-					{
-						setFileName("Error: " + errorMsg);
-					}
-				});
+				return buildErrorResponse(400, errorMsg, "Validation failed");
 			}
 
-			// Convert priorRequest to XML
+			// Convert to XML
 			byte[] xmlPayload = xmlUtil.convertToXml(requestFromUser.getPriorRequest());
 			String xmlString = new String(xmlPayload, StandardCharsets.UTF_8);
-			log.debug("XML Payload for priorRequest: [", xmlString, "]");
+			log.debug("XML Payload: {}", xmlString);
 
-			// Prepare UploadERxRequestDTO
+			// Create UploadERxRequestDTO for external API
 			UploadERxRequestDTO request = new UploadERxRequestDTO();
 			request.setFacilityLogin(requestFromUser.getFacilityLogin());
 			request.setFacilityPwd(requestFromUser.getFacilityPwd());
 			request.setClinicianLogin(requestFromUser.getClinicianLogin());
 			request.setClinicianPwd(requestFromUser.getClinicianPwd());
 			request.setFileName(requestFromUser.getFileName());
-			request.setFileContent(Base64.getEncoder().encode(xmlPayload)); // Encode as Base64
+			request.setFileContent(Base64.getEncoder().encode(xmlPayload));
 
-			// Convert request to XML
-			byte[] requestXml = xmlUtil.convertToXml(request);
+			// Prepare entity
+			UploadERxRequest entity = new UploadERxRequest();
+			entity.setUniqId(generator.generateUUID());
+			entity.setFacilityLogin(request.getFacilityLogin());
+			entity.setFacilityPwd(request.getFacilityPwd());
+			entity.setClinicianLogin(request.getClinicianLogin());
+			entity.setClinicianPwd(request.getClinicianPwd());
+			entity.setFileName(request.getFileName());
+			entity.setFileContent(xmlPayload);
+
+//			entity.seteRxReferenceNo(Integer.valueOf(generator.generateUUID()));
+//			entity.seteRxReferenceNo(Optional.ofNullable(generator.generateERxReferenceNo())
+//					.orElseThrow(() -> new IllegalStateException("Failed to generate eRxReferenceNo")));
+
+			System.out.println("entity => " + entity);
+			// Save to DB
+			UploadERxRequest savedEntity = uploadERxRequestRepository.save(entity);
+			log.info("Saved UploadERxRequest with ID: {}, eRxReferenceNo: {}", savedEntity.getId(),
+					savedEntity.getUniqId());
+
+			// Send to external API
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_XML);
-			HttpEntity<byte[]> requestEntity = new HttpEntity<>(requestXml, headers);
-			log.info("Sending POST to: {}/uploadERxRequest", eclaimUrl);
+			HttpEntity<byte[]> requestEntity = new HttpEntity<>(xmlUtil.convertToXml(request), headers);
 
-			// Send to Webhook.site
-			ResponseEntity<String> response = restTemplate.postForEntity(eclaimUrl + "/uploadERxRequest", requestEntity,
-					String.class);
+			ResponseEntity<String> apiResponse = restTemplate.postForEntity(eclaimUrl + "/uploadERxRequest",
+					requestEntity, String.class);
+			log.info("External API status: {}, body: {}", apiResponse.getStatusCodeValue(), apiResponse.getBody());
 
-			log.info("Webhook Response Status: ", response.getStatusCodeValue());
-			log.info("Webhook Response Body: [", response.getBody() + "]");
+			// Parse API response
+			UploadERxRequestResponseDTO responseDTO = xmlUtil.fromXml(apiResponse.getBody(),
+					UploadERxRequestResponseDTO.class);
+//			if (responseDTO.geteRxReferenceNo() == null) {
+//				responseDTO.seteRxReferenceNo(String.valueOf(savedEntity.getUniqId()));
+//			}
+			System.out.println("geteRxReferenceNo----------->" + responseDTO.geteRxReferenceNo());
 
-			// Since Webhook.site won't return valid XML, simulate response for testing
-			String mockXmlResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-					+ "<UploadERxAuthorizationResponseDTO>\n" + "  <PayerLogin>" + requestFromUser.getFacilityLogin()
-					+ "</PayerLogin>\n" + "  <PayerPwd>" + requestFromUser.getFacilityPwd() + "</PayerPwd>\n"
-					+ "  <ClinicianLogin>" + requestFromUser.getClinicianLogin() + "</ClinicianLogin>\n"
-					+ "  <ClinicianPwd>" + requestFromUser.getClinicianPwd() + "</ClinicianPwd>\n" + "  <FileContent>"
-					+ Base64.getEncoder().encodeToString(xmlPayload) + "</FileContent>\n" + "  <FileName>"
-					+ requestFromUser.getFileName() + "</FileName>\n" + "</UploadERxAuthorizationResponseDTO>";
-			log.debug("Simulated XML Response: [", mockXmlResponse, "]");
+			return ResponseEntity.ok(objectMapper.writeValueAsString(responseDTO));
 
-			// Deserialize mock response
-			UploadERxAuthorizationResponseDTO responseDTO = xmlUtil.fromXml(mockXmlResponse,
-					UploadERxAuthorizationResponseDTO.class);
-
-			return ResponseEntity.ok(responseDTO);
 		} catch (JAXBException e) {
-			e.printStackTrace();
-			String errorMessage = e.getMessage() != null ? e.getMessage() : "Unknown JAXB error";
-			if (e.getLinkedException() != null) {
-				errorMessage += "; Linked Exception: " + e.getLinkedException().getMessage();
-			}
-			log.error("JAXB Exception: ", errorMessage);
-			return ResponseEntity.status(500).body(new UploadERxAuthorizationResponseDTO() {
-				{
-					setFileName("XML Error: ");
-				}
-			});
+			log.error("XML processing error", e);
+			return buildErrorResponse(500, "XML Error: " + e.getMessage(), "Failed to process XML");
 		} catch (Exception e) {
-			e.printStackTrace();
-			String errorMessage = e.getMessage() != null ? e.getMessage() : "Unknown error";
-			log.error("General Exception: {}", errorMessage, e);
-			return ResponseEntity.status(500).body(new UploadERxAuthorizationResponseDTO() {
-				{
-					setFileName("Error: " + errorMessage);
-				}
-			});
+			log.error("Unexpected error", e);
+			return buildErrorResponse(500, "Error: " + e.getMessage(), "Unexpected error occurred");
+		}
+	}
+
+	private ResponseEntity<String> buildErrorResponse(int statusCode, String message, String report) {
+		try {
+			UploadERxRequestResponseDTO errorResponse = new UploadERxRequestResponseDTO();
+			errorResponse.seteRxReferenceNo(null);
+			errorResponse.setErrorMessage(message);
+			errorResponse.setErrorReport(report.getBytes(StandardCharsets.UTF_8));
+			return ResponseEntity.status(statusCode).body(objectMapper.writeValueAsString(errorResponse));
+		} catch (Exception e) {
+			log.error("Failed to serialize error response", e);
+			return ResponseEntity.status(500).body("Error: Failed to serialize response");
 		}
 	}
 

@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "uploadERxAuthorization")
+@Table(name = "tbl_eclaim_uploadERxAuth")
 public class UploadERxAuthorization {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
