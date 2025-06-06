@@ -1,5 +1,8 @@
 package com.ac.dha.dto.request;
 
+import java.util.Arrays;
+
+import jakarta.persistence.Column;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -28,7 +31,8 @@ public class UploadERxRequestDTO {
 
 	@XmlElement(name = "FileName")
 	private String fileName;
-
+	
+	
 
 	public String getFacilityLogin() {
 		return facilityLogin;
@@ -77,5 +81,34 @@ public class UploadERxRequestDTO {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
+
+	
+
+	public UploadERxRequestDTO(String facilityLogin, String facilityPwd, String clinicianLogin, String clinicianPwd,
+			byte[] fileContent, String fileName, Integer eRxReferenceNo, String errorMessage, byte[] errorReport) {
+		super();
+		this.facilityLogin = facilityLogin;
+		this.facilityPwd = facilityPwd;
+		this.clinicianLogin = clinicianLogin;
+		this.clinicianPwd = clinicianPwd;
+		this.fileContent = fileContent;
+		this.fileName = fileName;
+	
+	}
+
+	
+
+	@Override
+	public String toString() {
+		return "UploadERxRequestDTO [facilityLogin=" + facilityLogin + ", facilityPwd=" + facilityPwd
+				+ ", clinicianLogin=" + clinicianLogin + ", clinicianPwd=" + clinicianPwd + ", fileContent="
+				+ Arrays.toString(fileContent) + ", fileName=" + fileName + "]";
+	}
+
+	public UploadERxRequestDTO() {
+		super();
+	}
+	
+	
 
 }

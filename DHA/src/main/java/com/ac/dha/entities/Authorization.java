@@ -20,6 +20,17 @@ public class Authorization {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(name = "uniq_id")
+	// @CustomUniqueCode(entityType = "clinicalEditHistory", prefix = "ECPR", numberWidth = 10)
+	public String uniqId;
+	
+	@Column(name = "create_by")
+	public String createBy;
+
+	@Column(name = "create_on")
+	// @EpochTime
+	public Long createOn;
 
 	@Column(name = "type", nullable = false)
 	private String type;
@@ -38,24 +49,9 @@ public class Authorization {
 
 	@Column(name = "date_ordered", nullable = false)
 	private String dateOrdered;
-
-//	@OneToOne(mappedBy = "authorization_id", cascade = CascadeType.ALL)
-//	private Encounter encounter;
-//
-//	@OneToMany(mappedBy = "authorization_id", cascade = CascadeType.ALL)
-//	private List<Diagnosis> diagnoses;
-//
-//	@OneToMany(mappedBy = "authorization_id", cascade = CascadeType.ALL)
-//	private List<Activity> activities;
-//
-//	@OneToMany(mappedBy = "authorization_id", cascade = CascadeType.ALL)
-//	public List<Observation> observations;
-	
 	
 	@OneToOne(mappedBy = "authorization", cascade = CascadeType.ALL)
     private Encounter encounter;
-	
-	
 	
     @OneToMany(mappedBy = "authorization", cascade = CascadeType.ALL)
     private List<Diagnosis> diagnosis;

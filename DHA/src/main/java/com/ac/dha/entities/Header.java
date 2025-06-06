@@ -11,6 +11,17 @@ public class Header {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "uniq_id")
+	// @CustomUniqueCode(entityType = "clinicalEditHistory", prefix = "ECPR", numberWidth = 10)
+	public String uniqId;
+    
+    @Column(name = "create_by")
+	public String createBy;
+
+	@Column(name = "create_on")
+	// @EpochTime
+	public Long createOn;
 
     @Column(name = "sender_id", nullable = false)
     private String senderID;
