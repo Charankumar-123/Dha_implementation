@@ -19,6 +19,8 @@ public class GetNewTransactionsRequestDTO {
 	@XmlElement(name = "Pwd")
 	private String pwd;
 	
+	
+	
 
 //    @XmlElement(name = "PriorRequest")
 //	private ErxRequestDTO priorRequest;
