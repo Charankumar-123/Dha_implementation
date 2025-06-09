@@ -25,11 +25,6 @@ public class UploadERxRequestForUserDTO {
 	@XmlElement(name = "FileName")
 	private String fileName;
 	
-	
-	
-	
-
-
 	private ErxRequestDTO priorRequest;
 
 

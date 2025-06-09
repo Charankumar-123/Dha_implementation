@@ -38,8 +38,8 @@ public class UploadErxRequest {
 	@Column(name = "upload_date", nullable = false)
 	private LocalDateTime uploadDate;
 
-//	@Column(name = "e_rx_reference_no")
-//	private Integer eRxReferenceNo;
+	@Column(name = "e_rx_reference_no")
+	private Integer eRxReferenceNo;
 
 	@Column(name = "error_message")
 	private String errorMessage;
@@ -129,13 +129,13 @@ public class UploadErxRequest {
 		this.uploadDate = uploadDate;
 	}
 
-//	public Integer geteRxReferenceNo() {
-//		return eRxReferenceNo;
-//	}
-//
-//	public void seteRxReferenceNo(Integer eRxReferenceNo) {
-//		this.eRxReferenceNo = eRxReferenceNo;
-//	}
+	public Integer geteRxReferenceNo() {
+		return eRxReferenceNo;
+	}
+
+	public void seteRxReferenceNo(Integer eRxReferenceNo) {
+		this.eRxReferenceNo = eRxReferenceNo;
+	}
 
 	public String getErrorMessage() {
 		return errorMessage;
@@ -173,7 +173,7 @@ public class UploadErxRequest {
 		this.fileName = fileName;
 		this.fileContent = fileContent;
 		this.uploadDate = uploadDate;
-//		this.eRxReferenceNo = eRxReferenceNo;
+		this.eRxReferenceNo = eRxReferenceNo;
 		this.errorMessage = errorMessage;
 		this.errorReport = errorReport;
 		this.responseStatus = responseStatus;
@@ -187,9 +187,11 @@ public class UploadErxRequest {
 	public String toString() {
 		return "UploadErxRequest [id=" + id + ", facilityLogin=" + facilityLogin + ", facilityPwd=" + facilityPwd
 				+ ", clinicianLogin=" + clinicianLogin + ", clinicianPwd=" + clinicianPwd + ", fileName=" + fileName
-				+ ", fileContent=" + Arrays.toString(fileContent) + ", uploadDate=" + uploadDate + ", errorMessage="
-				+ errorMessage + ", errorReport=" + Arrays.toString(errorReport) + ", responseStatus=" + responseStatus
-				+ ", transactionId=" + "]";
+				+ ", fileContent=" + Arrays.toString(fileContent) + ", uploadDate=" + uploadDate + ", eRxReferenceNo="
+				+ eRxReferenceNo + ", errorMessage=" + errorMessage + ", errorReport=" + Arrays.toString(errorReport)
+				+ ", responseStatus=" + responseStatus + "]";
 	}
+
+	
 
 }
