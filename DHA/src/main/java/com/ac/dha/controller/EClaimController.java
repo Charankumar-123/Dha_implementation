@@ -1,5 +1,7 @@
 package com.ac.dha.controller;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,8 +50,9 @@ public class EClaimController {
 		return eclaimService.geteRxTransaction(dto);
 	}
 
-	@PostMapping("/search-transactions")
+	@PostMapping(value = "/search-transactions", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> searchTransactions(@RequestBody SearchTransactionsRequestDTO dto) {
+		System.out.println("Received search-transactions request: {}"+ dto);
 		return eclaimService.searchTransactions(dto);
 	}
 

@@ -22,11 +22,17 @@ public class XmlUtil {
 		marshaller.marshal(requestObject, baos);
 		return baos.toByteArray();
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	public static <T> T fromXml(String xml, Class<T> clazz) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(clazz);
-        Unmarshaller unmarshaller = context.createUnmarshaller();
-        return (T) unmarshaller.unmarshal(new StringReader(xml));
-    }
+		try {
+			JAXBContext context = JAXBContext.newInstance(clazz);
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			return (T) unmarshaller.unmarshal(new StringReader(xml));
+		} catch (JAXBException e) {
+			System.err.println("Failed to unmarshal XML to " + clazz.getSimpleName());
+			System.err.println("XML Content: \n" + xml);
+			throw e;
+		}
+	}
+
 }

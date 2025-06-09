@@ -15,30 +15,32 @@ public class SearchTransactionsRequest {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private String login;
-	
+
 	private String pwd;
-	
+
 	private String direction;
-	
+
 	private String callerLicense;
-	
+
 	private String clinicianLicense;
-	
+
 	private String memberID;
-	
+
 	private String eRxReferenceNo;
-	
+
 	private String transactionStatus;
-	
+
 	private LocalDateTime transactionFromDate;
-	
+
 	private LocalDateTime transactionToDate;
-	
+
 	private int minRecordCount;
-	
+
 	private int maxRecordCount;
+	
+	public SearchTransactionsRequest() {}
 
 	public Long getId() {
 		return id;
@@ -172,6 +174,5 @@ public class SearchTransactionsRequest {
 				+ ", transactionFromDate=" + transactionFromDate + ", transactionToDate=" + transactionToDate
 				+ ", minRecordCount=" + minRecordCount + ", maxRecordCount=" + maxRecordCount + "]";
 	}
-	
-	
+
 }

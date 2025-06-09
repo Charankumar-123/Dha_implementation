@@ -8,13 +8,32 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 
-@XmlRootElement(name = "UploadERxAuthorizationResponse")
+@XmlRootElement(name = "UploadERxRequestResponseDTO")
 @XmlAccessorType(XmlAccessType.FIELD)
-@Data
-public class UploadERxRequestResponseDTO {
+//@Data
+public class UploadERxRequestResponseDTO  {
+
+	public UploadERxRequestResponseDTO(String eRxReferenceNo, String status, String errorMessage, byte[] errorReport) {
+		super();
+		this.eRxReferenceNo = eRxReferenceNo;
+		this.status = status;
+		this.errorMessage = errorMessage;
+		this.errorReport = errorReport;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	@XmlElement(name = "ERxReferenceNo")
 	private String eRxReferenceNo;
+
+	@XmlElement(name = "status")
+	private String status;
 
 	@XmlElement(name = "ErrorMessage")
 	private String errorMessage;
@@ -51,8 +70,8 @@ public class UploadERxRequestResponseDTO {
 
 	@Override
 	public String toString() {
-		return "UploadERxRequestResponseDTO [eRxReferenceNo=" + eRxReferenceNo + ", errorMessage=" + errorMessage
-				+ ", errorReport=" + Arrays.toString(errorReport) + "]";
+		return "UploadERxRequestResponseDTO [eRxReferenceNo=" + eRxReferenceNo + ", status=" + status
+				+ ", errorMessage=" + errorMessage + ", errorReport=" + Arrays.toString(errorReport) + "]";
 	}
 
 	public UploadERxRequestResponseDTO(String eRxReferenceNo, String errorMessage, byte[] errorReport) {

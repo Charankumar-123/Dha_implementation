@@ -134,7 +134,6 @@ public class ERXEntityMapper {
 		activity.setNet(dto.getNet());
 		activity.setClinician(dto.getClinician());
 
-		// Map Observations within Activity and set the Activity reference
 		if (dto.getObservations() != null) {
 			List<Observation> observations = dto.getObservations().stream().map(this::toObservation)
 					.collect(Collectors.toList());
