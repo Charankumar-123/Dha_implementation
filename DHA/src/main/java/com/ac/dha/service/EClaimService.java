@@ -2,8 +2,11 @@ package com.ac.dha.service;
 
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Optional;
+import java.util.UUID;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -12,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.mapping.AccessOptions.SetOptions.Propagation;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +24,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -60,6 +68,7 @@ import com.ac.dha.utils.EclaimHttpResponse;
 import com.ac.dha.utils.XmlUtil;
 
 import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 
 @Service
@@ -311,10 +320,11 @@ public class EClaimService {
         record.setRequestedAt(LocalDateTime.now());
 
         try {
+        	
             // 1. Convert DTO to XML string
             byte[] xmlPayload = xmlUtil.convertToXml(requestDTO);
             String xmlString = new String(xmlPayload, StandardCharsets.UTF_8);
-            record.setXmlTransactions(xmlString);
+            record.setXmlTransactions(xmlString); 
 
             // 2. Prepare HTTP request
             HttpHeaders headers = new HttpHeaders();
@@ -327,6 +337,7 @@ public class EClaimService {
                     eclaimUrl + "/getNewTransactions", requestEntity, String.class);
 
             String responseBody = response.getBody();
+//            System.out.println("responseBody ==>" + responseBody);
             log.info("Received response:\n{}", responseBody);
 
             // 4. Process response
@@ -417,10 +428,7 @@ public class EClaimService {
 //		}
 //	}
     
-    
-    
-    
-    
+   
     @Transactional
     public ResponseEntity<String> geteRxTransaction(GeteRxTransactionRequestDTO dto) {
         if (dto == null) {
@@ -439,7 +447,7 @@ public class EClaimService {
             // 2. Convert DTO to XML
             byte[] xmlPayload = xmlUtil.convertToXml(dto);
             String xmlString = new String(xmlPayload, StandardCharsets.UTF_8);
-            record.setXmlTransactions(xmlString);  // Save request as XML
+            record.setXmlTransactions(xmlString);  
 
             // 3. Prepare HTTP request
             HttpHeaders headers = new HttpHeaders();
@@ -482,6 +490,24 @@ public class EClaimService {
 
             record.setXmlTransactions(responseDTO.getXmlTransactions());
             record.setErrorMessage(responseDTO.getErrorMessage());
+            
+//            if (responseDTO.getXmlTransactions() != null && !responseDTO.getXmlTransactions().isEmpty()) {
+//                JAXBContext innerCtx = JAXBContext.newInstance(PriorRequest.class);
+//                Unmarshaller innerUnmarshaller = innerCtx.createUnmarshaller();
+//                PriorRequest erxData = (PriorRequest) innerUnmarshaller.unmarshal(
+//                        new StringReader(responseDTO.getXmlTransactions()));
+//
+//                // 🔧 Set additional required fields manually
+//                erxData.setUniqId(UUID.randomUUID().toString());
+//                erxData.setCreateBy("system"); // or fetch from logged-in user
+//                erxData.setCreateOn(Instant.now().getEpochSecond());
+//
+//                // Optionally log to debug
+//                log.info("Saving PriorRequest: {}", erxData);
+//                System.out.println("Saving PriorRequest: {}" + erxData);
+//
+//                eclaimRepository.save(erxData);
+//            }
 
         } catch (Exception e) {
             log.warn("Fallback XML parsing failed: {}", e.getMessage());
