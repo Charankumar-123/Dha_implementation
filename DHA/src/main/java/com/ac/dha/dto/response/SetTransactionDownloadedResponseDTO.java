@@ -8,7 +8,10 @@ import lombok.Data;
 @XmlAccessorType(XmlAccessType.FIELD)
 @Data
 public class SetTransactionDownloadedResponseDTO {
-
+	
+	@XmlElement(name = "SetTransactionDownloadedResult")
+	private Integer setTransactionDownloadedResult;
+	
 	@XmlElement(name = "ErrorMessage")
 	private String errorMessage;
 }

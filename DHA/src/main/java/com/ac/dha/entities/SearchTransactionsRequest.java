@@ -52,6 +52,11 @@ public class SearchTransactionsRequest {
 
     @Column(name = "error_message", columnDefinition = "TEXT")
     private String errorMessage;
+    
+    
+    @Column(name = "search_transaction_result")
+    private Integer searchTransactionsResult;
+    
 
     @Column(name = "response_status")
     private String responseStatus;
@@ -196,11 +201,34 @@ public class SearchTransactionsRequest {
     public void setRequestedAt(LocalDateTime requestedAt) {
         this.requestedAt = requestedAt;
     }
+    
+    
+    
+    
+
+	public String geteRxReferenceNo() {
+		return eRxReferenceNo;
+	}
+
+	public void seteRxReferenceNo(String eRxReferenceNo) {
+		this.eRxReferenceNo = eRxReferenceNo;
+	}
+
+	public Integer getSearchTransactionsResult() {
+		return searchTransactionsResult;
+	}
+
+	public void setSearchTransactionsResult(Integer searchTransactionsResult) {
+		this.searchTransactionsResult = searchTransactionsResult;
+	}
+
+	
 
 	public SearchTransactionsRequest(Long id, String login, String pwd, String direction, String callerLicense,
 			String clinicianLicense, String memberID, String eRxReferenceNo, String transactionStatus,
-			LocalDateTime transactionFromDate, LocalDateTime transactionToDate, Integer minRecordCount, Integer maxRecordCount,
-			String foundTransactions, String errorMessage, String responseStatus, LocalDateTime requestedAt) {
+			LocalDateTime transactionFromDate, LocalDateTime transactionToDate, Integer minRecordCount,
+			Integer maxRecordCount, String foundTransactions, String errorMessage, Integer searchTransactionsResult,
+			String responseStatus, LocalDateTime requestedAt) {
 		super();
 		this.id = id;
 		this.login = login;
@@ -217,6 +245,7 @@ public class SearchTransactionsRequest {
 		this.maxRecordCount = maxRecordCount;
 		this.foundTransactions = foundTransactions;
 		this.errorMessage = errorMessage;
+		this.searchTransactionsResult = searchTransactionsResult;
 		this.responseStatus = responseStatus;
 		this.requestedAt = requestedAt;
 	}
@@ -232,9 +261,12 @@ public class SearchTransactionsRequest {
 				+ memberID + ", eRxReferenceNo=" + eRxReferenceNo + ", transactionStatus=" + transactionStatus
 				+ ", transactionFromDate=" + transactionFromDate + ", transactionToDate=" + transactionToDate
 				+ ", minRecordCount=" + minRecordCount + ", maxRecordCount=" + maxRecordCount + ", foundTransactions="
-				+ foundTransactions + ", errorMessage=" + errorMessage + ", responseStatus=" + responseStatus
-				+ ", requestedAt=" + requestedAt + "]";
+				+ foundTransactions + ", errorMessage=" + errorMessage + ", searchTransactionsResult="
+				+ searchTransactionsResult + ", responseStatus=" + responseStatus + ", requestedAt=" + requestedAt
+				+ "]";
 	}
+
+	
     
     
 }

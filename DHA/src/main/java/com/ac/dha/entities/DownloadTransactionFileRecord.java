@@ -30,6 +30,9 @@ public class DownloadTransactionFileRecord {
 
     @Column(name = "error_message", columnDefinition = "TEXT")
     private String errorMessage;
+    
+    @Column(name = "download_transaction_result")
+    private Integer downloadTransactionFileResult;
 
     @Column(name = "response_status")
     private String responseStatus;
@@ -108,9 +111,19 @@ public class DownloadTransactionFileRecord {
 	public void setRequestedAt(LocalDateTime requestedAt) {
 		this.requestedAt = requestedAt;
 	}
+	
+	
+
+	public Integer getDownloadTransactionFileResult() {
+		return downloadTransactionFileResult;
+	}
+
+	public void setDownloadTransactionFileResult(Integer downloadTransactionFileResult) {
+		this.downloadTransactionFileResult = downloadTransactionFileResult;
+	}
 
 	public DownloadTransactionFileRecord(Long id, String login, String pwd, String fileID, String fileName, byte[] file,
-			String errorMessage, String responseStatus, LocalDateTime requestedAt) {
+			String errorMessage, String responseStatus, LocalDateTime requestedAt, Integer downloadTransactionFileResult) {
 		super();
 		this.id = id;
 		this.login = login;
@@ -121,6 +134,7 @@ public class DownloadTransactionFileRecord {
 		this.errorMessage = errorMessage;
 		this.responseStatus = responseStatus;
 		this.requestedAt = requestedAt;
+		this.downloadTransactionFileResult = downloadTransactionFileResult;
 	}
 
 	public DownloadTransactionFileRecord() {
@@ -131,8 +145,11 @@ public class DownloadTransactionFileRecord {
 	public String toString() {
 		return "DownloadTransactionFileRecord [id=" + id + ", login=" + login + ", pwd=" + pwd + ", fileID=" + fileID
 				+ ", fileName=" + fileName + ", file=" + Arrays.toString(file) + ", errorMessage=" + errorMessage
-				+ ", responseStatus=" + responseStatus + ", requestedAt=" + requestedAt + "]";
+				+ ", downloadTransactionFileResult=" + downloadTransactionFileResult + ", responseStatus="
+				+ responseStatus + ", requestedAt=" + requestedAt + "]";
 	}
+
+	
     
     
 }

@@ -8,6 +8,9 @@ import lombok.Data;
 @XmlAccessorType(XmlAccessType.FIELD)
 @Data
 public class SearchTransactionsResponseDTO {
+	
+	@XmlElement(name = "SearchTransactionsResult")
+	private Integer searchTransactionsResult;
 
 	@XmlElement(name = "FoundTransactions")
 	private String foundTransactions;

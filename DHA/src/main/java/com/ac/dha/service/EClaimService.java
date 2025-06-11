@@ -2,11 +2,11 @@ package com.ac.dha.service;
 
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
+
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
+
+
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,8 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.mapping.AccessOptions.SetOptions.Propagation;
+
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,9 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.ResourceAccessException;
+
 import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -68,7 +66,7 @@ import com.ac.dha.utils.EclaimHttpResponse;
 import com.ac.dha.utils.XmlUtil;
 
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
+
 import jakarta.xml.bind.Unmarshaller;
 
 @Service
@@ -96,8 +94,7 @@ public class EClaimService {
 	@Autowired
 	private ERXEntityMapper entityMapper;
 
-//	@Autowired
-//	private RandomUIGenerator randomUIGenerator;
+
 
 	@Autowired
 	private UploadErxRequestRepository uploadErxRequestRepository;
@@ -113,11 +110,7 @@ public class EClaimService {
 	@Autowired
 	private EclaimHttpResponse eclaimHttpResponse; // work and test during API testing
 
-//	@Autowired
-//	private AuthorizationRepository authorizationRepository;
-//	
-//	@Autowired
-//	private HeaderRepository headerRepository;
+
 
 	public ResponseEntity<String> sendPriorRequestToEclaim(ErxRequestDTO priorRequest) {
 		try {
@@ -128,7 +121,7 @@ public class EClaimService {
 			String xmlString = new String(xmlPayload, StandardCharsets.UTF_8);
 			log.debug("XML Payload as String:\n", xmlString);
 
-			// Convert DTO to Entity and Save to Database
+			
 			PriorRequest entity = entityMapper.toPriorRequest(priorRequest);
 			eclaimRepository.save(entity);
 			log.info("PriorRequest saved to database with ID: {}", entity.getId());
@@ -165,11 +158,11 @@ public class EClaimService {
 		record.setUploadDate(LocalDateTime.now());
 
 		try {
-			// Convert DTO to XML
+			
 			byte[] xmlPayload = xmlUtil.convertToXml(requestFromUser.getPriorRequest());
 			record.setFileContent(xmlPayload);
 
-			// Prepare upload DTO
+			
 			UploadERxRequestDTO uploadDTO = new UploadERxRequestDTO();
 			uploadDTO.setFacilityLogin(requestFromUser.getFacilityLogin());
 			uploadDTO.setFacilityPwd(requestFromUser.getFacilityPwd());
@@ -180,7 +173,7 @@ public class EClaimService {
 
 			uploadErxRequestRepository.save(record);
 
-			// Call webhook
+			
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_XML);
 			headers.setAccept(Collections.singletonList(MediaType.APPLICATION_XML));
@@ -207,7 +200,7 @@ public class EClaimService {
 	private void processResponse(UploadErxRequest record, String responseBody) {
 		String cleanedResponse = cleanXmlResponse(responseBody);
 
-		// Try JAXB
+	
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(UploadERxRequestResponseDTO.class);
 			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -223,7 +216,7 @@ public class EClaimService {
 			log.warn("JAXB failed, trying manual XML parsing: {}", ex.getMessage());
 		}
 
-		// Fallback: Manual XML
+	
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
@@ -232,9 +225,7 @@ public class EClaimService {
 			doc.getDocumentElement().normalize();
 
 			NodeList refNoNode = doc.getElementsByTagName("ERxReferenceNo");
-//            if (refNoNode.getLength() > 0) {
-//                record.seteRxReferenceNo(Integer.parseInt(refNoNode.item(0).getTextContent().trim()));
-//            }
+
 
 			NodeList errorMsgNode = doc.getElementsByTagName("ErrorMessage");
 			if (errorMsgNode.getLength() > 0) {
@@ -309,70 +300,74 @@ public class EClaimService {
 	
 	
 	@Transactional
-    public ResponseEntity<String> getNewTransactions(GetNewTransactionsRequestDTO requestDTO) {
-        if (requestDTO == null) {
-            throw new IllegalArgumentException("Missing requestDTO");
-        }
+	public ResponseEntity<String> getNewTransactions(GetNewTransactionsRequestDTO requestDTO) {
+	    if (requestDTO == null) {
+	        throw new IllegalArgumentException("Missing requestDTO");
+	    }
 
-        GetNewTransactionsRequest record = new GetNewTransactionsRequest();
-        record.setLogin(requestDTO.getLogin());
-        record.setPwd(requestDTO.getPwd());
-        record.setRequestedAt(LocalDateTime.now());
+	    GetNewTransactionsRequest record = new GetNewTransactionsRequest();
+	    record.setLogin(requestDTO.getLogin());
+	    record.setPwd(requestDTO.getPwd());
+	    record.setRequestedAt(LocalDateTime.now());
+	    record.setResult(0); // 🔐 Initialize result to avoid NULL constraint violation
 
-        try {
-        	
-            // 1. Convert DTO to XML string
-            byte[] xmlPayload = xmlUtil.convertToXml(requestDTO);
-            String xmlString = new String(xmlPayload, StandardCharsets.UTF_8);
-            record.setXmlTransactions(xmlString); 
+	    try {
+	        // Convert DTO to XML string
+	        byte[] xmlPayload = xmlUtil.convertToXml(requestDTO);
+	        String xmlString = new String(xmlPayload, StandardCharsets.UTF_8);
+	        record.setXmlTransactions(xmlString); // Store request XML
 
-            // 2. Prepare HTTP request
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_XML);
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_XML));
-            HttpEntity<String> requestEntity = new HttpEntity<>(xmlString, headers);
+	        // Set headers and send request
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(MediaType.APPLICATION_XML);
+	        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_XML));
+	        HttpEntity<String> requestEntity = new HttpEntity<>(xmlString, headers);
 
-            // 3. Send to external webhook
-            ResponseEntity<String> response = restTemplate.postForEntity(
-                    eclaimUrl + "/getNewTransactions", requestEntity, String.class);
+	        ResponseEntity<String> response = restTemplate.postForEntity(
+	                eclaimUrl + "/getNewTransactions", requestEntity, String.class);
 
-            String responseBody = response.getBody();
-//            System.out.println("responseBody ==>" + responseBody);
-            log.info("Received response:\n{}", responseBody);
+	        String responseBody = response.getBody();
+	        log.info("Received response:\n{}", responseBody);
 
-            // 4. Process response
-            processResponse(record, responseBody);
-            record.setResponseStatus(response.getStatusCode().toString());
+	        // Process XML response and update record
+	        processResponse(record, responseBody);
+	        record.setResponseStatus(response.getStatusCode().toString());
 
-            getNewTransactionsRepository.save(record);
-            return ResponseEntity.status(response.getStatusCode()).body(responseBody);
+	        getNewTransactionsRepository.save(record);
+	        return ResponseEntity.status(response.getStatusCode()).body(responseBody);
 
-        } catch (Exception e) {
-            log.error("GetNewTransactions failed: {}", e.getMessage(), e);
-            record.setResponseStatus("error");
-            record.setErrorMessage("Error: " + e.getMessage());
-            getNewTransactionsRepository.save(record);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
-        }
-    }
+	    } catch (Exception e) {
+	        log.error("GetNewTransactions failed: {}", e.getMessage(), e);
+	        record.setResponseStatus("error");
+	        record.setErrorMessage("Error: " + e.getMessage());
 
-    private void processResponse(GetNewTransactionsRequest record, String responseBody) {
-        String cleanedResponse = cleanXmlResponse(responseBody);
+	        // Save the error record with default result = 0
+	        getNewTransactionsRepository.save(record);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+	    }
+	}
 
-        // Try JAXB parsing
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(GetNewTransactionsResponseDTO.class);
-            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            GetNewTransactionsResponseDTO responseDTO = (GetNewTransactionsResponseDTO)
-                    unmarshaller.unmarshal(new StringReader(cleanedResponse));
+	private void processResponse(GetNewTransactionsRequest record, String responseBody) {
+	    String cleanedResponse = cleanXmlResponse(responseBody);
 
-            record.setXmlTransactions(responseDTO.getXmlTransactions());
-            record.setErrorMessage(responseDTO.getErrorMessage());
-            return;
-        } catch (Exception ex) {
-            log.warn("JAXB failed, trying fallback XML: {}", ex.getMessage());
-        }
-    }
+	    try {
+	        JAXBContext jaxbContext = JAXBContext.newInstance(GetNewTransactionsResponseDTO.class);
+	        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+	        GetNewTransactionsResponseDTO responseDTO =
+	                (GetNewTransactionsResponseDTO) unmarshaller.unmarshal(new StringReader(cleanedResponse));
+
+	        record.setXmlTransactions(responseDTO.getXmlTransactions());
+	        record.setErrorMessage(responseDTO.getErrorMessage());
+
+	        // If success, mark result = 1
+	        record.setResult(responseDTO.getResult());
+
+	    } catch (Exception ex) {
+	        log.warn("JAXB failed, trying fallback XML: {}", ex.getMessage());
+	        record.setResult(1); // Or keep 0 to indicate JAXB failure
+	    }
+	}
+
 
         // Fallback XML parsing
 //        try {
@@ -435,7 +430,7 @@ public class EClaimService {
             throw new IllegalArgumentException("Missing request DTO");
         }
 
-        // 1. Create and populate DB record
+       
         GeteRxTransactionRequestRecord record = new GeteRxTransactionRequestRecord();
         record.setLogin(dto.getLogin());
         record.setPwd(dto.getPwd());
@@ -444,29 +439,29 @@ public class EClaimService {
         record.setRequestedAt(LocalDateTime.now());
 
         try {
-            // 2. Convert DTO to XML
+            
             byte[] xmlPayload = xmlUtil.convertToXml(dto);
             String xmlString = new String(xmlPayload, StandardCharsets.UTF_8);
             record.setXmlTransactions(xmlString);  
 
-            // 3. Prepare HTTP request
+           
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_XML);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_XML));
             HttpEntity<String> requestEntity = new HttpEntity<>(xmlString, headers);
 
-            // 4. Send request to DHPO API
+          
             ResponseEntity<String> response = restTemplate.postForEntity(
                 eclaimUrl + "/GeteRxTransaction", requestEntity, String.class);
 
             String responseBody = response.getBody();
             log.info("Received GeteRxTransaction response:\n{}", responseBody);
 
-            // 5. Process response (parse XML)
+            
             processGeteRxTransactionResponse(record, responseBody);
             record.setResponseStatus(response.getStatusCode().toString());
 
-            // 6. Save request/response to database
+      
             geteRxTransactionRequestRepository.save(record);
 
             return ResponseEntity.status(response.getStatusCode()).body(responseBody);
@@ -490,6 +485,14 @@ public class EClaimService {
 
             record.setXmlTransactions(responseDTO.getXmlTransactions());
             record.setErrorMessage(responseDTO.getErrorMessage());
+            record.setErxTransactionResult(responseDTO.getErxTransactionResult());
+            
+        } catch (Exception e) {
+            log.warn("Fallback XML parsing failed: {}", e.getMessage());
+            record.setErrorMessage("Parsing failed: " + e.getMessage());
+            record.setErxTransactionResult(1);
+        }
+    }
             
 //            if (responseDTO.getXmlTransactions() != null && !responseDTO.getXmlTransactions().isEmpty()) {
 //                JAXBContext innerCtx = JAXBContext.newInstance(PriorRequest.class);
@@ -509,11 +512,7 @@ public class EClaimService {
 //                eclaimRepository.save(erxData);
 //            }
 
-        } catch (Exception e) {
-            log.warn("Fallback XML parsing failed: {}", e.getMessage());
-            record.setErrorMessage("Parsing failed: " + e.getMessage());
-        }
-    }
+        
 
 
 
@@ -547,7 +546,7 @@ public class EClaimService {
     public ResponseEntity<String> searchTransactions(SearchTransactionsRequestDTO dto) {
         SearchTransactionsRequest record = new SearchTransactionsRequest();
 
-        // Map DTO to entity fields
+        
         record.setLogin(dto.getLogin());
         record.setPwd(dto.getPwd());
         record.setDirection(dto.getDirection());
@@ -557,7 +556,7 @@ public class EClaimService {
         record.setERxReferenceNo(dto.geteRxReferenceNo());
         record.setTransactionStatus(dto.getTransactionStatus());
 
-        // Dates might be String or LocalDateTime in DTO — adjust accordingly
+        
         record.setTransactionFromDate(dto.getTransactionFromDate());
         record.setTransactionToDate(dto.getTransactionToDate());
 
@@ -566,7 +565,7 @@ public class EClaimService {
         record.setRequestedAt(LocalDateTime.now());
 
         try {
-            // Convert DTO to XML payload
+           
             byte[] xmlPayload = xmlUtil.convertToXml(dto);
 
             HttpHeaders headers = new HttpHeaders();
@@ -574,18 +573,16 @@ public class EClaimService {
 
             HttpEntity<byte[]> requestEntity = new HttpEntity<>(xmlPayload, headers);
 
-            // Call external DHA API
+            
             ResponseEntity<String> response = restTemplate.postForEntity(
                     eclaimUrl + "/SearchTransactions", requestEntity, String.class);
 
             String responseBody = response.getBody();
             record.setResponseStatus(response.getStatusCode().toString());
 
-            // Store raw request XML and response XML
             record.setFoundTransactions(responseBody);
 
-            // You can parse the response XML into a response DTO if you have one,
-            // similar to your other methods, to extract errorMessage if needed.
+         
             try {
                 JAXBContext jaxbContext = JAXBContext.newInstance(SearchTransactionsResponseDTO.class);
                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -594,10 +591,12 @@ public class EClaimService {
 
                 record.setFoundTransactions(responseDTO.getFoundTransactions());
                 record.setErrorMessage(responseDTO.getErrorMessage());
+                record.setSearchTransactionsResult(responseDTO.getSearchTransactionsResult());
 
             } catch (Exception ex) {
                 log.warn("Failed to parse SearchTransactions response XML: {}", ex.getMessage());
                 record.setErrorMessage("Parsing failed: " + ex.getMessage());
+                record.setSearchTransactionsResult(1);
             }
 
             // Save the record
@@ -678,7 +677,8 @@ public class EClaimService {
                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
                 DownloadTransactionFileResponseDTO responseDTO = (DownloadTransactionFileResponseDTO)
                         unmarshaller.unmarshal(new StringReader(responseBody));
-
+                
+                
                 record.setFileName(responseDTO.getFileName());
                 record.setFile(responseDTO.getFile());
                 record.setErrorMessage(responseDTO.getErrorMessage());
@@ -754,10 +754,12 @@ public class EClaimService {
                     unmarshaller.unmarshal(new StringReader(responseBody));
 
                 record.setErrorMessage(responseDTO.getErrorMessage());
+                record.setSetTransactionDownloadedResult(responseDTO.getSetTransactionDownloadedResult());
 
             } catch (Exception e) {
                 log.warn("Failed to parse SetTransactionDownloaded response XML: {}", e.getMessage());
                 record.setErrorMessage("Parsing failed: " + e.getMessage());
+                record.setSetTransactionDownloadedResult(1);
             }
 
             // Persist record

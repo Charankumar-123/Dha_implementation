@@ -30,6 +30,9 @@ public class GeteRxTransactionRequestRecord {
 
     @Column(name = "error_message", columnDefinition = "TEXT")
     private String errorMessage;
+    
+    @Column(name = "erx_transaction_result",nullable=false)
+    private Integer erxTransactionResult;
 
     @Column(name = "response_status")
     private String responseStatus;
@@ -108,9 +111,22 @@ public class GeteRxTransactionRequestRecord {
 	public void setRequestedAt(LocalDateTime requestedAt) {
 		this.requestedAt = requestedAt;
 	}
+	
+	
+
+	public Integer getErxTransactionResult() {
+		return erxTransactionResult;
+	}
+
+	public void setErxTransactionResult(Integer erxTransactionResult) {
+		this.erxTransactionResult = erxTransactionResult;
+	}
+
+	
 
 	public GeteRxTransactionRequestRecord(Long id, String login, String pwd, String memberID, int eRxReferenceNo,
-			String xmlTransactions, String errorMessage, String responseStatus, LocalDateTime requestedAt) {
+			String xmlTransactions, String errorMessage, Integer erxTransactionResult, String responseStatus,
+			LocalDateTime requestedAt) {
 		super();
 		this.id = id;
 		this.login = login;
@@ -119,6 +135,7 @@ public class GeteRxTransactionRequestRecord {
 		this.eRxReferenceNo = eRxReferenceNo;
 		this.xmlTransactions = xmlTransactions;
 		this.errorMessage = errorMessage;
+		this.erxTransactionResult = erxTransactionResult;
 		this.responseStatus = responseStatus;
 		this.requestedAt = requestedAt;
 	}
@@ -131,9 +148,11 @@ public class GeteRxTransactionRequestRecord {
 	public String toString() {
 		return "GeteRxTransactionRequestRecord [id=" + id + ", login=" + login + ", pwd=" + pwd + ", memberID="
 				+ memberID + ", eRxReferenceNo=" + eRxReferenceNo + ", xmlTransactions=" + xmlTransactions
-				+ ", errorMessage=" + errorMessage + ", responseStatus=" + responseStatus + ", requestedAt="
-				+ requestedAt + "]";
+				+ ", errorMessage=" + errorMessage + ", erxTransactionResult=" + erxTransactionResult
+				+ ", responseStatus=" + responseStatus + ", requestedAt=" + requestedAt + "]";
 	}
+
+	
     
     
 }

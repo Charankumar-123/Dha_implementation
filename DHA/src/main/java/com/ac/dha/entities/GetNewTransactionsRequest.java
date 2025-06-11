@@ -16,6 +16,9 @@ public class GetNewTransactionsRequest {
 
     @Column(name = "pwd", nullable = false)
     private String pwd;
+    
+    @Column(name = "Transaction_result", nullable = true)
+    private Integer result;
 
     @Lob
     @Column(name = "xml_transactions")
@@ -86,13 +89,26 @@ public class GetNewTransactionsRequest {
 	public void setRequestedAt(LocalDateTime requestedAt) {
 		this.requestedAt = requestedAt;
 	}
+	
+	
 
-	public GetNewTransactionsRequest(Long id, String login, String pwd, String xmlTransactions, String errorMessage,
-			String responseStatus, LocalDateTime requestedAt) {
+	public Integer getResult() {
+		return result;
+	}
+
+	public void setResult(Integer result) {
+		this.result = result;
+	}
+
+	
+
+	public GetNewTransactionsRequest(Long id, String login, String pwd, Integer result, String xmlTransactions,
+			String errorMessage, String responseStatus, LocalDateTime requestedAt) {
 		super();
 		this.id = id;
 		this.login = login;
 		this.pwd = pwd;
+		this.result = result;
 		this.xmlTransactions = xmlTransactions;
 		this.errorMessage = errorMessage;
 		this.responseStatus = responseStatus;
@@ -105,11 +121,12 @@ public class GetNewTransactionsRequest {
 
 	@Override
 	public String toString() {
-		return "GetNewTransactionsRequest [id=" + id + ", login=" + login + ", pwd=" + pwd + ", xmlTransactions="
-				+ xmlTransactions + ", errorMessage=" + errorMessage + ", responseStatus=" + responseStatus
-				+ ", requestedAt=" + requestedAt + "]";
+		return "GetNewTransactionsRequest [id=" + id + ", login=" + login + ", pwd=" + pwd + ", result=" + result
+				+ ", xmlTransactions=" + xmlTransactions + ", errorMessage=" + errorMessage + ", responseStatus="
+				+ responseStatus + ", requestedAt=" + requestedAt + "]";
 	}
 
+	
     
 }
 
