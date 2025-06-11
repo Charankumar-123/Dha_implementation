@@ -9,8 +9,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "SearchTransactionsResponseDTO")
 //@Data
 public class SearchTransactionsResponseDTO {
-	
-	public SearchTransactionsResponseDTO() {}
+
+	public SearchTransactionsResponseDTO() {
+	}
 
 	@Override
 	public String toString() {

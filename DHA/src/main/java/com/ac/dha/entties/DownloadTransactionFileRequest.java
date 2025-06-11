@@ -19,6 +19,8 @@ public class DownloadTransactionFileRequest {
 	private String pwd;
 
 	private String fileID;
+	
+	public DownloadTransactionFileRequest() {}
 
 	public Long getId() {
 		return id;

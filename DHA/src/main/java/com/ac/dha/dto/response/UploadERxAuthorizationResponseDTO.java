@@ -8,9 +8,9 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 
-@XmlRootElement(name = "UploadERxAuthorizationResponse")
+@XmlRootElement(name = "UploadERxAuthorizationResponseDTO")
 @XmlAccessorType(XmlAccessType.FIELD)
-@Data
+//@Data
 public class UploadERxAuthorizationResponseDTO {
 
 	public UploadERxAuthorizationResponseDTO(String payerLogin, String payerPwd, byte[] fileContent, String fileName) {

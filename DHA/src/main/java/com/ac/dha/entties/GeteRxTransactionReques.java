@@ -22,6 +22,10 @@ public class GeteRxTransactionReques {
 
 //	private int eRxReferenceNo;
 
+	public GeteRxTransactionReques() {
+		super();
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -58,14 +62,14 @@ public class GeteRxTransactionReques {
 //		return eRxReferenceNo;
 //	}
 //
-//	public void seteRxReferenceNo(int eRxReferenceNo) {
+//	public void serequesteRxReferenceNo(int eRxReferenceNo) {
 //		this.eRxReferenceNo = eRxReferenceNo;
 //	}
 
 	@Override
 	public String toString() {
 		return "GeteRxTransactionReques [id=" + id + ", login=" + login + ", pwd=" + pwd + ", memberID=" + memberID
-				+  "]";
+				+ "]";
 	}
 
 	public GeteRxTransactionReques(Long id, String login, String pwd, String memberID) {

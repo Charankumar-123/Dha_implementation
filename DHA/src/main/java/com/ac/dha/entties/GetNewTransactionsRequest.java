@@ -18,6 +18,9 @@ public class GetNewTransactionsRequest {
 
 	private String pwd;
 
+	public GetNewTransactionsRequest() {
+	}
+
 	public Long getId() {
 		return id;
 	}

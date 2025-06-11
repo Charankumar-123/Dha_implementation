@@ -68,7 +68,7 @@ public class EclaimReceiverController {
 	public ResponseEntity<SearchTransactionsResponseDTO> searchTransactions(@RequestBody String xmlRequest) {
 		SearchTransactionsResponseDTO response = new SearchTransactionsResponseDTO();
 		try {
-			log.info("Received XML for /search-transactions: {}", xmlRequest);
+			log.info("Received XML for /xml/search-transactions: {}", xmlRequest);
 			response.setFoundTransactions("5");
 			response.setErrorMessage(null);
 			return ResponseEntity.ok(response);

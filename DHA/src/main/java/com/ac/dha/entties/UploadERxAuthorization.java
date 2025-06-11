@@ -22,6 +22,8 @@ public class UploadERxAuthorization {
 	private byte[] fileContent;
 
 	private String fileName;
+	
+	public UploadERxAuthorization() {}
 
 	public Long getId() {
 		return id;
