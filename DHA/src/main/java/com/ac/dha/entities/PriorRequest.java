@@ -1,17 +1,27 @@
-// PriorRequest.java
 package com.ac.dha.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "prior_request")
+// @EntityListeners({ CustomUniqueCodeListener.class, EpochTimeProcessor.class, CustomColumnProcessor.class })
+@Table(name = "tbl_eclaim_prior_requests")
 public class PriorRequest {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @Column(name = "uniq_id")
-	// @CustomUniqueCode(entityType = "clinicalEditHistory", prefix = "ECPR", numberWidth = 10)
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(name = "uniq_id")
+	// @CustomUniqueCode(entityType = "clinicalEditHistory", prefix = "ECPR",
+	// numberWidth = 10)
 	public String uniqId;
 
 	@Column(name = "create_by")
@@ -20,7 +30,7 @@ public class PriorRequest {
 	@Column(name = "create_on")
 	// @EpochTime
 	public Long createOn;
-	
+
 	@Column(name = "patient_uhid")
 	private String patientUhid;
 
@@ -33,15 +43,16 @@ public class PriorRequest {
 	@Column(name = "authorization_uniq_id")
 	private String authorizationUniqId;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "header_id", referencedColumnName = "id")
-    private Header header;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "header_id")
+	private Header header;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "authorization_id", referencedColumnName = "id")
-    private Authorization authorization;
-    
- // getters and setters
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "authorization_id")
+	private Authorization authorization;
+
+	public PriorRequest() {
+	}
 
 	public Long getId() {
 		return id;
@@ -123,6 +134,14 @@ public class PriorRequest {
 		this.authorization = authorization;
 	}
 
+	@Override
+	public String toString() {
+		return "PriorRequest [id=" + id + ", uniqId=" + uniqId + ", createBy=" + createBy + ", createOn=" + createOn
+				+ ", patientUhid=" + patientUhid + ", patientNo=" + patientNo + ", headerUniqId=" + headerUniqId
+				+ ", authorizationUniqId=" + authorizationUniqId + ", header=" + header + ", authorization="
+				+ authorization + "]";
+	}
+
 	public PriorRequest(Long id, String uniqId, String createBy, Long createOn, String patientUhid, String patientNo,
 			String headerUniqId, String authorizationUniqId, Header header, Authorization authorization) {
 		super();
@@ -137,25 +156,5 @@ public class PriorRequest {
 		this.header = header;
 		this.authorization = authorization;
 	}
-
-	public PriorRequest() {
-		super();
-	}
-
-	@Override
-	public String toString() {
-		return "PriorRequest [id=" + id + ", uniqId=" + uniqId + ", createBy=" + createBy + ", createOn=" + createOn
-				+ ", patientUhid=" + patientUhid + ", patientNo=" + patientNo + ", headerUniqId=" + headerUniqId
-				+ ", authorizationUniqId=" + authorizationUniqId + ", header=" + header + ", authorization="
-				+ authorization + "]";
-	}
-    
-	
-   
-    
-    
-    
-    
-    
 
 }

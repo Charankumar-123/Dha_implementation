@@ -12,13 +12,13 @@ import com.ac.dha.dto.request.EncounterDTO;
 import com.ac.dha.dto.request.ErxRequestDTO;
 import com.ac.dha.dto.request.HeaderDTO;
 import com.ac.dha.dto.request.ObservationDTO;
-import com.ac.dha.entties.Activity;
-import com.ac.dha.entties.Authorization;
-import com.ac.dha.entties.Diagnosis;
-import com.ac.dha.entties.Encounter;
-import com.ac.dha.entties.Header;
-import com.ac.dha.entties.Observation;
-import com.ac.dha.entties.PriorRequest;
+import com.ac.dha.entities.Activity;
+import com.ac.dha.entities.Authorization;
+import com.ac.dha.entities.Diagnosis;
+import com.ac.dha.entities.Encounter;
+import com.ac.dha.entities.Header;
+import com.ac.dha.entities.Observation;
+import com.ac.dha.entities.PriorRequest;
 
 @Component
 public class ERXEntityMapper {

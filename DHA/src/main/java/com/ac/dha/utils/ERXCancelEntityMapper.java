@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 import com.ac.dha.dto.request.CancelAuthorizationDTO;
 import com.ac.dha.dto.request.ErxRequestCancelDTO;
 import com.ac.dha.dto.request.HeaderDTO;
-import com.ac.dha.entties.CancelAuthorization;
-import com.ac.dha.entties.Header;
-import com.ac.dha.entties.PriorCancel;
+import com.ac.dha.entities.CancelAuthorization;
+import com.ac.dha.entities.Header;
+import com.ac.dha.entities.PriorCancel;
 
 @Component
 public class ERXCancelEntityMapper {

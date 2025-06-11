@@ -1,27 +1,44 @@
 package com.ac.dha.entities;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Encounter")
+@Table(name = "tbl_eclaim_encounter")
 public class Encounter {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "authorization_id", nullable = false)
-    private Authorization authorization;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(name = "facility_id", nullable = false)
-    private String facilityID;
+	@Column(name = "uniq_id")
+	// @CustomUniqueCode(entityType = "clinicalEditHistory", prefix = "ECPR",
+	// numberWidth = 10)
+	private String uniqId;
 
-    @Column(name = "type", nullable = false)
-    private String type;
-    
-    public Encounter() {}
+	@Column(name = "facility_id")
+	private String facilityID;
+
+	private String type;
+
+	@OneToOne(mappedBy = "encounter")
+	private Authorization authorization;
+
+	public Encounter() {
+	}
+
+	public Encounter(Long id, String uniqId, String facilityID, String type, Authorization authorization) {
+		this.id = id;
+		this.uniqId = uniqId;
+		this.facilityID = facilityID;
+		this.type = type;
+		this.authorization = authorization;
+	}
 
 	public Long getId() {
 		return id;
@@ -31,12 +48,12 @@ public class Encounter {
 		this.id = id;
 	}
 
-	public Authorization getAuthorization() {
-		return authorization;
+	public String getUniqId() {
+		return uniqId;
 	}
 
-	public void setAuthorization(Authorization authorization) {
-		this.authorization = authorization;
+	public void setUniqId(String uniqId) {
+		this.uniqId = uniqId;
 	}
 
 	public String getFacilityID() {
@@ -55,19 +72,17 @@ public class Encounter {
 		this.type = type;
 	}
 
-	public Encounter(Long id, Authorization authorization, String facilityID, String type) {
-		super();
-		this.id = id;
+	public Authorization getAuthorization() {
+		return authorization;
+	}
+
+	public void setAuthorization(Authorization authorization) {
 		this.authorization = authorization;
-		this.facilityID = facilityID;
-		this.type = type;
 	}
 
 	@Override
 	public String toString() {
-		return "Encounter [id=" + id + ", authorization=" + authorization + ", facilityID=" + facilityID + ", type="
-				+ type + "]";
+		return "Encounter [id=" + id + ", uniqId=" + uniqId + ", facilityID=" + facilityID + ", type=" + type
+				+ ", authorization=" + authorization + "]";
 	}
-    
-    
 }

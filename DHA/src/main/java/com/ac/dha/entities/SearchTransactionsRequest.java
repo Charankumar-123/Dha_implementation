@@ -1,210 +1,102 @@
 package com.ac.dha.entities;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 @Entity
-@Table(name = "search_transactions_request")
+@Table(name = "tbl_eclaim_searchTrxReq")
 public class SearchTransactionsRequest {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(name = "login")
-    private String login;
+	private String login;
 
-    @Column(name = "pwd")
-    private String pwd;
+	private String pwd;
 
-    @Column(name = "direction")
-    private String direction;
+	private String direction;
 
-    @Column(name = "caller_license")
-    private String callerLicense;
+	private String callerLicense;
 
-    @Column(name = "clinician_license")
-    private String clinicianLicense;
+	private String clinicianLicense;
 
-    @Column(name = "member_id")
-    private String memberID;
+	private String memberID;
 
-    @Column(name = "erx_reference_no")
-    private String eRxReferenceNo;
+	private String eRxReferenceNo;
 
-    @Column(name = "transaction_status")
-    private String transactionStatus;
+	private String transactionStatus;
 
-    @Column(name = "transaction_from_date")
-    private LocalDateTime transactionFromDate;
+	private LocalDateTime transactionFromDate;
 
-    @Column(name = "transaction_to_date")
-    private LocalDateTime transactionToDate;
+	private LocalDateTime transactionToDate;
 
-    @Column(name = "min_record_count")
-    private Integer minRecordCount;
+	private int minRecordCount;
 
-    @Column(name = "max_record_count")
-    private Integer maxRecordCount;
+	private int maxRecordCount;
+	
+	public SearchTransactionsRequest() {}
 
-    @Column(name = "found_transactions", columnDefinition = "TEXT")
-    private String foundTransactions;
+	public Long getId() {
+		return id;
+	}
 
-    @Column(name = "error_message", columnDefinition = "TEXT")
-    private String errorMessage;
-    
-    
-    @Column(name = "search_transaction_result")
-    private Integer searchTransactionsResult;
-    
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    @Column(name = "response_status")
-    private String responseStatus;
+	public String getLogin() {
+		return login;
+	}
 
-    @Column(name = "requested_at")
-    private LocalDateTime requestedAt;
+	public void setLogin(String login) {
+		this.login = login;
+	}
 
-    // Getters and Setters below
+	public String getPwd() {
+		return pwd;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public String getDirection() {
+		return direction;
+	}
 
-    public String getLogin() {
-        return login;
-    }
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
 
-    public void setLogin(String login) {
-        this.login = login;
-    }
+	public String getCallerLicense() {
+		return callerLicense;
+	}
 
-    public String getPwd() {
-        return pwd;
-    }
+	public void setCallerLicense(String callerLicense) {
+		this.callerLicense = callerLicense;
+	}
 
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
+	public String getClinicianLicense() {
+		return clinicianLicense;
+	}
 
-    public String getDirection() {
-        return direction;
-    }
+	public void setClinicianLicense(String clinicianLicense) {
+		this.clinicianLicense = clinicianLicense;
+	}
 
-    public void setDirection(String string) {
-        this.direction = string;
-    }
+	public String getMemberID() {
+		return memberID;
+	}
 
-    public String getCallerLicense() {
-        return callerLicense;
-    }
-
-    public void setCallerLicense(String callerLicense) {
-        this.callerLicense = callerLicense;
-    }
-
-    public String getClinicianLicense() {
-        return clinicianLicense;
-    }
-
-    public void setClinicianLicense(String clinicianLicense) {
-        this.clinicianLicense = clinicianLicense;
-    }
-
-    public String getMemberID() {
-        return memberID;
-    }
-
-    public void setMemberID(String memberID) {
-        this.memberID = memberID;
-    }
-
-    public String getERxReferenceNo() {
-        return eRxReferenceNo;
-    }
-
-    public void setERxReferenceNo(String string) {
-        this.eRxReferenceNo = string;
-    }
-
-    public String getTransactionStatus() {
-        return transactionStatus;
-    }
-
-    public void setTransactionStatus(String string) {
-        this.transactionStatus = string;
-    }
-
-    public LocalDateTime getTransactionFromDate() {
-        return transactionFromDate;
-    }
-
-    public void setTransactionFromDate(LocalDateTime localDateTime) {
-        this.transactionFromDate = localDateTime;
-    }
-
-    public LocalDateTime getTransactionToDate() {
-        return transactionToDate;
-    }
-
-    public void setTransactionToDate(LocalDateTime localDateTime) {
-        this.transactionToDate = localDateTime;
-    }
-
-    public Integer getMinRecordCount() {
-        return minRecordCount;
-    }
-
-    public void setMinRecordCount(Integer minRecordCount) {
-        this.minRecordCount = minRecordCount;
-    }
-
-    public Integer getMaxRecordCount() {
-        return maxRecordCount;
-    }
-
-    public void setMaxRecordCount(Integer maxRecordCount) {
-        this.maxRecordCount = maxRecordCount;
-    }
-
-    public String getFoundTransactions() {
-        return foundTransactions;
-    }
-
-    public void setFoundTransactions(String foundTransactions) {
-        this.foundTransactions = foundTransactions;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-
-    public String getResponseStatus() {
-        return responseStatus;
-    }
-
-    public void setResponseStatus(String responseStatus) {
-        this.responseStatus = responseStatus;
-    }
-
-    public LocalDateTime getRequestedAt() {
-        return requestedAt;
-    }
-
-    public void setRequestedAt(LocalDateTime requestedAt) {
-        this.requestedAt = requestedAt;
-    }
-    
-    
-    
-    
+	public void setMemberID(String memberID) {
+		this.memberID = memberID;
+	}
 
 	public String geteRxReferenceNo() {
 		return eRxReferenceNo;
@@ -214,21 +106,50 @@ public class SearchTransactionsRequest {
 		this.eRxReferenceNo = eRxReferenceNo;
 	}
 
-	public Integer getSearchTransactionsResult() {
-		return searchTransactionsResult;
+	public String getTransactionStatus() {
+		return transactionStatus;
 	}
 
-	public void setSearchTransactionsResult(Integer searchTransactionsResult) {
-		this.searchTransactionsResult = searchTransactionsResult;
+	public void setTransactionStatus(String transactionStatus) {
+		this.transactionStatus = transactionStatus;
 	}
 
-	
+	public LocalDateTime getTransactionFromDate() {
+		return transactionFromDate;
+	}
+
+	public void setTransactionFromDate(LocalDateTime transactionFromDate) {
+		this.transactionFromDate = transactionFromDate;
+	}
+
+	public LocalDateTime getTransactionToDate() {
+		return transactionToDate;
+	}
+
+	public void setTransactionToDate(LocalDateTime transactionToDate) {
+		this.transactionToDate = transactionToDate;
+	}
+
+	public int getMinRecordCount() {
+		return minRecordCount;
+	}
+
+	public void setMinRecordCount(int minRecordCount) {
+		this.minRecordCount = minRecordCount;
+	}
+
+	public int getMaxRecordCount() {
+		return maxRecordCount;
+	}
+
+	public void setMaxRecordCount(int maxRecordCount) {
+		this.maxRecordCount = maxRecordCount;
+	}
 
 	public SearchTransactionsRequest(Long id, String login, String pwd, String direction, String callerLicense,
 			String clinicianLicense, String memberID, String eRxReferenceNo, String transactionStatus,
-			LocalDateTime transactionFromDate, LocalDateTime transactionToDate, Integer minRecordCount,
-			Integer maxRecordCount, String foundTransactions, String errorMessage, Integer searchTransactionsResult,
-			String responseStatus, LocalDateTime requestedAt) {
+			LocalDateTime transactionFromDate, LocalDateTime transactionToDate, int minRecordCount,
+			int maxRecordCount) {
 		super();
 		this.id = id;
 		this.login = login;
@@ -243,15 +164,6 @@ public class SearchTransactionsRequest {
 		this.transactionToDate = transactionToDate;
 		this.minRecordCount = minRecordCount;
 		this.maxRecordCount = maxRecordCount;
-		this.foundTransactions = foundTransactions;
-		this.errorMessage = errorMessage;
-		this.searchTransactionsResult = searchTransactionsResult;
-		this.responseStatus = responseStatus;
-		this.requestedAt = requestedAt;
-	}
-
-	public SearchTransactionsRequest() {
-		super();
 	}
 
 	@Override
@@ -260,13 +172,7 @@ public class SearchTransactionsRequest {
 				+ ", callerLicense=" + callerLicense + ", clinicianLicense=" + clinicianLicense + ", memberID="
 				+ memberID + ", eRxReferenceNo=" + eRxReferenceNo + ", transactionStatus=" + transactionStatus
 				+ ", transactionFromDate=" + transactionFromDate + ", transactionToDate=" + transactionToDate
-				+ ", minRecordCount=" + minRecordCount + ", maxRecordCount=" + maxRecordCount + ", foundTransactions="
-				+ foundTransactions + ", errorMessage=" + errorMessage + ", searchTransactionsResult="
-				+ searchTransactionsResult + ", responseStatus=" + responseStatus + ", requestedAt=" + requestedAt
-				+ "]";
+				+ ", minRecordCount=" + minRecordCount + ", maxRecordCount=" + maxRecordCount + "]";
 	}
 
-	
-    
-    
 }

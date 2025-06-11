@@ -2,8 +2,8 @@ package com.ac.dha.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ac.dha.entities.SetTransactionDownloadedRecord;
+import com.ac.dha.entities.SetTransactionDownloadedRequest;
 
-public interface SetTransactionDownloadedRepository extends JpaRepository<SetTransactionDownloadedRecord , Long> {
+public interface SetTransactionDownloadedRepository extends JpaRepository<SetTransactionDownloadedRequest, Long> {
 
 }
