@@ -9,6 +9,9 @@ import lombok.Data;
 @XmlAccessorType(XmlAccessType.FIELD)
 //@Data
 public class DownloadTransactionFileResponseDTO {
+	
+	@XmlElement(name = "DownloadTransactionFileResult")
+    private String downloadTransactionFileResult;
 
     @XmlElement(name = "FileName")
     private String fileName;

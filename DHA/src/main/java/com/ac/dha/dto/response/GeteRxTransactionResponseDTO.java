@@ -10,6 +10,9 @@ import lombok.Data;
 @XmlRootElement(name = "GeteRxTransactionResponseDTO")
 //@Data
 public class GeteRxTransactionResponseDTO {
+	
+	@XmlElement(name = "ErxTransactionResult")
+    private Integer erxTransactionResult;
 
     @XmlElement(name = "XmlTransactions")
     private String xmlTransactions;

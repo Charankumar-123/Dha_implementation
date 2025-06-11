@@ -147,6 +147,40 @@ public class SearchTransactionsRequestDTO {
 	public void setMaxRecordCount(int maxRecordCount) {
 		this.maxRecordCount = maxRecordCount;
 	}
+
+	public SearchTransactionsRequestDTO(String login, String pwd, String direction, String callerLicense,
+			String clinicianLicense, String memberID, String eRxReferenceNo, String transactionStatus,
+			LocalDateTime transactionFromDate, LocalDateTime transactionToDate, int minRecordCount,
+			int maxRecordCount) {
+		super();
+		this.login = login;
+		this.pwd = pwd;
+		this.direction = direction;
+		this.callerLicense = callerLicense;
+		this.clinicianLicense = clinicianLicense;
+		this.memberID = memberID;
+		this.eRxReferenceNo = eRxReferenceNo;
+		this.transactionStatus = transactionStatus;
+		this.transactionFromDate = transactionFromDate;
+		this.transactionToDate = transactionToDate;
+		this.minRecordCount = minRecordCount;
+		this.maxRecordCount = maxRecordCount;
+	}
+
+	public SearchTransactionsRequestDTO() {
+		super();
+	}
+
+	@Override
+	public String toString() {
+		return "SearchTransactionsRequestDTO [login=" + login + ", pwd=" + pwd + ", direction=" + direction
+				+ ", callerLicense=" + callerLicense + ", clinicianLicense=" + clinicianLicense + ", memberID="
+				+ memberID + ", eRxReferenceNo=" + eRxReferenceNo + ", transactionStatus=" + transactionStatus
+				+ ", transactionFromDate=" + transactionFromDate + ", transactionToDate=" + transactionToDate
+				+ ", minRecordCount=" + minRecordCount + ", maxRecordCount=" + maxRecordCount + "]";
+	}
+	
+	
 	
 
 }

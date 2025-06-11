@@ -9,6 +9,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "GetNewTransactionsResponseDTO")
 //@Data
 public class GetNewTransactionsResponseDTO {
+	
+	@XmlElement(name = "GetNewTransactionsResult")
+    private Integer result;
 
 	@XmlElement(name = "XmlTransactions")
 	private String xmlTransactions;

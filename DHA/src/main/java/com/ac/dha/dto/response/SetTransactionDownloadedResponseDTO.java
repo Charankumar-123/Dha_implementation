@@ -10,7 +10,10 @@ import lombok.Data;
 @XmlRootElement(name = "SetTransactionDownloadedResponseDTO")
 //@Data
 public class SetTransactionDownloadedResponseDTO {
-
+	
+	@XmlElement(name = "SetTransactionDownloadedResult")
+	private Integer setTransactionDownloadedResult;
+	
 	@XmlElement(name = "ErrorMessage")
 	private String errorMessage;
 	

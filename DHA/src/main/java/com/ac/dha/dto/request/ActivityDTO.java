@@ -40,6 +40,8 @@ public class ActivityDTO {
 
 	@XmlElement(name = "Observation")
 	private List<ObservationDTO> observations;
+	
+	
 
 	public String getId() {
 		return id;

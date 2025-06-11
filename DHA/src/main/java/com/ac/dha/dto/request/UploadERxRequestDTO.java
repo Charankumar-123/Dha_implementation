@@ -2,7 +2,6 @@ package com.ac.dha.dto.request;
 
 import java.util.Arrays;
 
-import jakarta.persistence.Column;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -16,8 +15,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class UploadERxRequestDTO {
 
-//	@Column(name = "uniq_id", nullable = false)
-//	private String uniqId;
+	// @Column(name = "uniq_id", nullable = false)
+	// private String uniqId;
 
 	@XmlElement(name = "FacilityLogin")
 	private String facilityLogin;
@@ -85,13 +84,10 @@ public class UploadERxRequestDTO {
 		this.fileName = fileName;
 	}
 
-	public UploadERxRequestDTO() {
-	}
-
-	public UploadERxRequestDTO( String facilityLogin, String facilityPwd, String clinicianLogin,
-			String clinicianPwd, byte[] fileContent, String fileName) {
+	public UploadERxRequestDTO(String facilityLogin, String facilityPwd, String clinicianLogin, String clinicianPwd,
+			byte[] fileContent, String fileName, Integer eRxReferenceNo, String errorMessage, byte[] errorReport) {
 		super();
-//		this.uniqId = uniqId;
+
 		this.facilityLogin = facilityLogin;
 		this.facilityPwd = facilityPwd;
 		this.clinicianLogin = clinicianLogin;
@@ -100,19 +96,35 @@ public class UploadERxRequestDTO {
 		this.fileName = fileName;
 	}
 
+	// @Override
+	// public String toString() {
+	// return ", facilityLogin=" + facilityLogin + ", facilityPwd="
+	// + facilityPwd + ", clinicianLogin=" + clinicianLogin + ", clinicianPwd=" +
+	// clinicianPwd
+	// + ", fileContent=" + Arrays.toString(fileContent) + ", fileName=" + fileName
+	// + "]";
+	// }
+
+	// public String getUniqId() {
+	// return uniqId;
+	// }
+	//
+	// public void setUniqId(String uniqId) {
+	// this.uniqId = uniqId;
+	// }
+	// =======
+	//
+	// }
+
 	@Override
 	public String toString() {
-		return ", facilityLogin=" + facilityLogin + ", facilityPwd="
-				+ facilityPwd + ", clinicianLogin=" + clinicianLogin + ", clinicianPwd=" + clinicianPwd
-				+ ", fileContent=" + Arrays.toString(fileContent) + ", fileName=" + fileName + "]";
+		return "UploadERxRequestDTO [facilityLogin=" + facilityLogin + ", facilityPwd=" + facilityPwd
+				+ ", clinicianLogin=" + clinicianLogin + ", clinicianPwd=" + clinicianPwd + ", fileContent="
+				+ Arrays.toString(fileContent) + ", fileName=" + fileName + "]";
 	}
 
-//	public String getUniqId() {
-//		return uniqId;
-//	}
-//
-//	public void setUniqId(String uniqId) {
-//		this.uniqId = uniqId;
-//	}
+	public UploadERxRequestDTO() {
+		super();
+	}
 
 }
