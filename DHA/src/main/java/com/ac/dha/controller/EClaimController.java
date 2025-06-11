@@ -1,11 +1,13 @@
 package com.ac.dha.controller;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ac.dha.dto.request.DownloadTransactionFileRequestDTO;
 import com.ac.dha.dto.request.ErxRequestDTO;
@@ -15,13 +17,10 @@ import com.ac.dha.dto.request.SearchTransactionsRequestDTO;
 import com.ac.dha.dto.request.SetTransactionDownloadedRequestDTO;
 import com.ac.dha.dto.request.UploadERxAuthorizationForUserDTO;
 import com.ac.dha.dto.request.UploadERxRequestForUserDTO;
-import com.ac.dha.dto.response.UploadERxAuthorizationResponseDTO;
 import com.ac.dha.service.EClaimService;
 
-@Controller
+@RestController
 public class EClaimController {
-
-//	public static final Logger logger = LoggerFactory.getLogger(EClaimController.class);
 
 	@Autowired
 	private EClaimService eclaimService;
@@ -32,9 +31,8 @@ public class EClaimController {
 	}
 
 	@PostMapping(value = "/upload-erx-request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UploadERxAuthorizationResponseDTO> uploadERxRequest(
-			@RequestBody UploadERxRequestForUserDTO dto) {
-		return eclaimService.uploadERxRequest(dto);
+	public ResponseEntity<String> uploadERxRequest(@RequestBody UploadERxRequestForUserDTO requestFromUser) {
+		return eclaimService.uploadERxRequest(requestFromUser);
 	}
 
 	@PostMapping("/upload-authorization")
@@ -52,8 +50,9 @@ public class EClaimController {
 		return eclaimService.geteRxTransaction(dto);
 	}
 
-	@PostMapping("/search-transactions")
+	@PostMapping(value = "/search-transactions", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> searchTransactions(@RequestBody SearchTransactionsRequestDTO dto) {
+		System.out.println("Received search-transactions request: {}"+ dto);
 		return eclaimService.searchTransactions(dto);
 	}
 

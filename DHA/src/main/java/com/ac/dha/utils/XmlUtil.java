@@ -2,6 +2,7 @@ package com.ac.dha.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
+import java.io.StringWriter;
 
 import org.springframework.stereotype.Component;
 
@@ -22,10 +23,36 @@ public class XmlUtil {
 		marshaller.marshal(requestObject, baos);
 		return baos.toByteArray();
 	}
+
+	public static <T> T fromXml(String xml, Class<T> clazz) throws JAXBException {
+		try {
+			JAXBContext context = JAXBContext.newInstance(clazz);
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			return (T) unmarshaller.unmarshal(new StringReader(xml));
+		} catch (JAXBException e) {
+			System.err.println("Failed to unmarshal XML to " + clazz.getSimpleName());
+			System.err.println("XML Content: \n" + xml);
+			throw e;
+		}
+	}
 	
-	public <T> T fromXml(String xml, Class<T> clazz) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(clazz);
-        Unmarshaller unmarshaller = context.createUnmarshaller();
-        return clazz.cast(unmarshaller.unmarshal(new StringReader(xml)));
-    }
+	public String convertToXmls(Object object) throws JAXBException {
+	    StringWriter sw = new StringWriter();
+	    JAXBContext context = JAXBContext.newInstance(object.getClass());
+	    Marshaller marshaller = context.createMarshaller();
+	    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+	    marshaller.marshal(object, sw);
+	    return sw.toString();
+	}
+	
+	public String convertToXmlss(Object object, Class<?> clazz) throws JAXBException {
+	    StringWriter sw = new StringWriter();
+	    JAXBContext context = JAXBContext.newInstance(clazz);
+	    Marshaller marshaller = context.createMarshaller();
+	    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+	    marshaller.marshal(object, sw);
+	    return sw.toString();
+	}
+
+
 }

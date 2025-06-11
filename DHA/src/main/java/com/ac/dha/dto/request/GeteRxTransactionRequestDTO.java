@@ -13,6 +13,10 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GeteRxTransactionRequestDTO {
 
+	public String getMemberID() {
+		return memberID;
+	}
+
 	@XmlElement(name = "Login")
 	private String login;
 
@@ -52,7 +56,7 @@ public class GeteRxTransactionRequestDTO {
 		this.pwd = pwd;
 	}
 
-	public String getMemberID() {
+	public String GeteRxTransactionReques() {
 		return memberID;
 	}
 

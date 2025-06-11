@@ -1,5 +1,7 @@
 package com.ac.dha.dto.response;
 
+import java.util.Arrays;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -8,23 +10,26 @@ import lombok.Data;
 
 @XmlRootElement(name = "UploadERxAuthorizationResponseDTO")
 @XmlAccessorType(XmlAccessType.FIELD)
-@Data
+//@Data
 public class UploadERxAuthorizationResponseDTO {
 
-	@XmlElement(name = "PayerLogin")
-	private String payerLogin;
+	public UploadERxAuthorizationResponseDTO(String payerLogin, String payerPwd, byte[] fileContent, String fileName) {
+		super();
+		this.payerLogin = payerLogin;
+		this.payerPwd = payerPwd;
+		this.fileContent = fileContent;
+		this.fileName = fileName;
+	}
 
-	@XmlElement(name = "PayerPwd")
-	private String payerPwd;
+	public UploadERxAuthorizationResponseDTO() {
+	}
 
-	@XmlElement(name = "FileContent")
-	private byte[] fileContent;
+	@Override
+	public String toString() {
+		return "UploadERxAuthorizationResponseDTO [payerLogin=" + payerLogin + ", payerPwd=" + payerPwd
+				+ ", fileContent=" + Arrays.toString(fileContent) + ", fileName=" + fileName + "]";
+	}
 
-	@XmlElement(name = "FileName")
-	private String fileName;
-
-	// Optional: If Lombok @Data is used, the following getters/setters are
-	// redundant.
 	public String getPayerLogin() {
 		return payerLogin;
 	}
@@ -56,4 +61,20 @@ public class UploadERxAuthorizationResponseDTO {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
+
+	@XmlElement(name = "PayerLogin")
+	private String payerLogin;
+
+	@XmlElement(name = "PayerPwd")
+	private String payerPwd;
+
+	@XmlElement(name = "FileContent")
+	private byte[] fileContent;
+
+	@XmlElement(name = "FileName")
+	private String fileName;
+
+	// Optional: If Lombok @Data is used, the following getters/setters are
+	// redundant.
+
 }

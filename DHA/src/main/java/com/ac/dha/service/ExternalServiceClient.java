@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.ac.dha.controller.EClaimController;
 import com.ac.dha.dto.response.UploadERxAuthorizationResponseDTO;
+import com.ac.dha.dto.response.UploadERxRequestResponseDTO;
 import com.ac.dha.utils.XmlUtil;
 
 import jakarta.xml.bind.JAXBException;
@@ -49,4 +50,30 @@ public class ExternalServiceClient {
 
 		return xmlResponse;
 	}
+
+	public String callUploadERxResponse(Integer eRxReferenceNo, String errorMessage, String errorReport)
+			throws JAXBException {
+
+		UploadERxRequestResponseDTO responseDTO = new UploadERxRequestResponseDTO();
+
+		responseDTO.seteRxReferenceNo(eRxReferenceNo != null ? eRxReferenceNo.toString() : "0");
+		responseDTO.setErrorMessage(errorMessage);
+		responseDTO.setErrorReport(errorReport != null ? errorReport.getBytes(StandardCharsets.UTF_8) : null);
+
+		byte[] xmlBytes = xmlUtil.convertToXml(responseDTO);
+		if (xmlBytes == null || xmlBytes.length == 0) {
+			throw new JAXBException("Failed to generate XML response");
+		}
+		String xmlResponse = new String(xmlBytes, StandardCharsets.UTF_8);
+		logger.info("Generated XML Response: " + xmlResponse);
+
+		if (!xmlResponse.startsWith("<?xml")) {
+			throw new JAXBException("Invalid XML generated: " + xmlResponse);
+		}
+
+		return xmlResponse;
+	}
+	
+	
+
 }
